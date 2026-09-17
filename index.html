@@ -1,1 +1,821 @@
+<!DOCTYPE html>
+<html lang="ja">
 
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>いつもね™｜ずーっとうちの子。</title>
+
+  <meta name="description"
+    content="いつもね™は、うちの子との毎日、写真、記念日、好きだったもの、思い出を残していくライフアーカイブです。">
+
+  <meta name="theme-color" content="#ffffff">
+
+  <style>
+    :root {
+      --bg: #fbfaf8;
+      --card: #ffffff;
+      --text: #4a4a4a;
+      --subtext: #777777;
+      --line: #e8e4df;
+
+      --pink: #d95779;
+      --purple: #7c52a5;
+      --blue: #5379c6;
+
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Hiragino Kaku Gothic ProN",
+        "Yu Gothic",
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.8;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(92%, 920px);
+      margin: 0 auto;
+    }
+
+
+    /* =========================
+       Header
+    ========================= */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+
+      background: rgba(251, 250, 248, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .header-inner {
+      height: 68px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+
+      object-fit: contain;
+    }
+
+    .brand-name {
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-name sup {
+      font-size: 10px;
+    }
+
+    .menu-button {
+      border: none;
+      background: transparent;
+
+      font-size: 26px;
+      cursor: pointer;
+    }
+
+
+    /* =========================
+       Hero
+    ========================= */
+
+    .hero {
+      min-height: 78vh;
+
+      display: flex;
+      align-items: center;
+
+      text-align: center;
+      padding: 64px 0 72px;
+    }
+
+    .hero-logo {
+      width: 170px;
+      margin: 0 auto 28px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+
+      font-size: clamp(38px, 9vw, 64px);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+
+    .hero h1 sup {
+      font-size: 14px;
+      vertical-align: super;
+    }
+
+    .hero-sub {
+      margin: 0 0 28px;
+
+      font-size: 16px;
+      color: var(--subtext);
+      letter-spacing: 0.08em;
+    }
+
+    .catch {
+      margin: 0 0 18px;
+
+      font-size: clamp(24px, 6vw, 38px);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .lead {
+      max-width: 580px;
+      margin: 0 auto 36px;
+
+      color: var(--subtext);
+      font-size: 16px;
+    }
+
+    .hero-buttons {
+      display: grid;
+      gap: 12px;
+
+      max-width: 360px;
+      margin: 0 auto;
+    }
+
+    .btn {
+      display: block;
+
+      padding: 16px 22px;
+
+      border-radius: 999px;
+
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .btn-primary {
+      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--blue),
+          var(--purple),
+          var(--pink)
+        );
+    }
+
+    .btn-secondary {
+      background: white;
+      border: 1px solid var(--line);
+    }
+
+    .btn:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+
+
+    /* =========================
+       Intro
+    ========================= */
+
+    section {
+      padding: 80px 0;
+    }
+
+    .section-title {
+      margin: 0 0 16px;
+
+      text-align: center;
+
+      font-size: 28px;
+      font-weight: 500;
+    }
+
+    .section-lead {
+      max-width: 620px;
+      margin: 0 auto 42px;
+
+      text-align: center;
+      color: var(--subtext);
+    }
+
+    .message-box {
+      background: white;
+
+      padding: 38px 28px;
+
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+
+      text-align: center;
+    }
+
+    .message-box p {
+      margin: 0;
+      font-size: 18px;
+      line-height: 2;
+    }
+
+
+    /* =========================
+       Features
+    ========================= */
+
+    .features {
+      display: grid;
+      gap: 18px;
+    }
+
+    .feature-card {
+      padding: 26px;
+
+      background: var(--card);
+
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+    }
+
+    .feature-icon {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .feature-card h3 {
+      margin: 0 0 8px;
+
+      font-size: 19px;
+      font-weight: 600;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--subtext);
+    }
+
+
+    /* =========================
+       Story
+    ========================= */
+
+    .story {
+      text-align: center;
+    }
+
+    .story-lines {
+      margin: 0 auto;
+
+      max-width: 580px;
+
+      font-size: 18px;
+      line-height: 2.2;
+    }
+
+    .story-lines strong {
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+
+    /* =========================
+       CTA
+    ========================= */
+
+    .cta-box {
+      padding: 46px 26px;
+
+      border-radius: 28px;
+
+      text-align: center;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(83, 121, 198, 0.08),
+          rgba(124, 82, 165, 0.08),
+          rgba(217, 87, 121, 0.08)
+        );
+    }
+
+    .cta-box h2 {
+      margin: 0 0 14px;
+
+      font-size: 28px;
+      font-weight: 500;
+    }
+
+    .cta-box p {
+      margin: 0 0 26px;
+
+      color: var(--subtext);
+    }
+
+    .cta-box .btn {
+      max-width: 340px;
+      margin: 0 auto;
+    }
+
+
+    /* =========================
+       Footer
+    ========================= */
+
+    footer {
+      padding: 44px 0;
+
+      text-align: center;
+      color: #999;
+
+      font-size: 13px;
+    }
+
+    .footer-logo {
+      width: 70px;
+      margin: 0 auto 12px;
+      opacity: 0.9;
+    }
+
+
+    /* =========================
+       Desktop
+    ========================= */
+
+    @media (min-width: 700px) {
+
+      .features {
+        grid-template-columns:
+          repeat(2, 1fr);
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================
+       Header
+  ========================== -->
+
+  <header>
+
+    <div class="container header-inner">
+
+      <a href="index.html" class="brand">
+
+        <img
+          src="images/itsumone-mark.png"
+          alt="いつもね"
+          class="brand-mark"
+        >
+
+        <div class="brand-name">
+          いつもね<sup>™</sup>
+        </div>
+
+      </a>
+
+      <button class="menu-button"
+        aria-label="メニュー">
+        ☰
+      </button>
+
+    </div>
+
+  </header>
+
+
+
+  <main>
+
+
+    <!-- =========================
+         Hero
+    ========================== -->
+
+    <section class="hero">
+
+      <div class="container">
+
+        <img
+          src="images/itsumone-logo.png"
+          alt="いつもね"
+          class="hero-logo"
+        >
+
+        <h1>
+          いつもね<sup>™</sup>
+        </h1>
+
+        <p class="hero-sub">
+          Itsumone
+        </p>
+
+        <p class="catch">
+          ずーっとうちの子。
+        </p>
+
+        <p class="lead">
+
+          写真も、思い出も、
+          好きだったものも。
+
+          <br>
+
+          一緒に過ごした毎日を、
+          いつまでも残しておくための
+          ライフアーカイブです。
+
+        </p>
+
+
+        <div class="hero-buttons">
+
+          <a
+            href="register.html"
+            class="btn btn-primary">
+
+            うちの子を登録する
+
+          </a>
+
+          <a
+            href="#about"
+            class="btn btn-secondary">
+
+            いつもね™について
+
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         About
+    ========================== -->
+
+    <section id="about">
+
+      <div class="container">
+
+        <h2 class="section-title">
+          いつも、そばにいた。
+        </h2>
+
+        <p class="section-lead">
+
+          犬でも、猫でも、鳥でも、
+          どんな生き物でも。
+
+          <br>
+
+          一緒に暮らしたその子は、
+          ずっと、うちの子です。
+
+        </p>
+
+
+        <div class="message-box">
+
+          <p>
+
+            いつもね™は、
+            「ペットの記録」ではなく、
+
+            <br>
+
+            <strong>
+              一緒に暮らした時間の記録
+            </strong>
+
+            を残す場所です。
+
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         Archive Features
+    ========================== -->
+
+    <section>
+
+      <div class="container">
+
+        <h2 class="section-title">
+          うちの子のアーカイブ
+        </h2>
+
+        <p class="section-lead">
+
+          何気ない毎日も、
+          いつか大切な思い出になります。
+
+        </p>
+
+
+        <div class="features">
+
+
+          <div class="feature-card">
+
+            <div class="feature-icon">
+              📷
+            </div>
+
+            <h3>
+              写真
+            </h3>
+
+            <p>
+              日々の写真や、
+              大切な一枚を残します。
+            </p>
+
+          </div>
+
+
+
+          <div class="feature-card">
+
+            <div class="feature-icon">
+              🎂
+            </div>
+
+            <h3>
+              記念日
+            </h3>
+
+            <p>
+              誕生日、
+              お迎えした日、
+              大切な記念日を記録します。
+            </p>
+
+          </div>
+
+
+
+          <div class="feature-card">
+
+            <div class="feature-icon">
+              ❤️
+            </div>
+
+            <h3>
+              好きだったもの
+            </h3>
+
+            <p>
+              食べ物、
+              おもちゃ、
+              場所など、
+              その子らしさを残します。
+            </p>
+
+          </div>
+
+
+
+          <div class="feature-card">
+
+            <div class="feature-icon">
+              🗺
+            </div>
+
+            <h3>
+              思い出の場所
+            </h3>
+
+            <p>
+              散歩道、
+              公園、
+              旅行先など、
+              一緒に過ごした場所を残します。
+            </p>
+
+          </div>
+
+
+
+          <div class="feature-card">
+
+            <div class="feature-icon">
+              📝
+            </div>
+
+            <h3>
+              思い出
+            </h3>
+
+            <p>
+              しぐさ、
+              性格、
+              あの日の出来事などを
+              自由に書き残せます。
+            </p>
+
+          </div>
+
+
+
+          <div class="feature-card">
+
+            <div class="feature-icon">
+              🕊
+            </div>
+
+            <h3>
+              メモリアル
+            </h3>
+
+            <p>
+              お別れしたあとも、
+              その子との記録は
+              そのまま残ります。
+            </p>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         Story
+    ========================== -->
+
+    <section class="story">
+
+      <div class="container">
+
+        <div class="story-lines">
+
+          生まれた日も。
+
+          <br>
+
+          うちに来た日も。
+
+          <br>
+
+          一緒に歩いた道も。
+
+          <br>
+
+          大好きだったものも。
+
+          <br><br>
+
+          <strong>
+            ずーっとうちの子。
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         CTA
+    ========================== -->
+
+    <section>
+
+      <div class="container">
+
+        <div class="cta-box">
+
+          <h2>
+            うちの子の記録を、
+            はじめよう。
+          </h2>
+
+          <p>
+
+            まずは名前と写真から。
+
+            <br>
+
+            少しずつ、
+            一緒に過ごした時間を
+            残していきましょう。
+
+          </p>
+
+          <a
+            href="register.html"
+            class="btn btn-primary">
+
+            うちの子を登録する
+
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =========================
+       Footer
+  ========================== -->
+
+  <footer>
+
+    <div class="container">
+
+      <img
+        src="images/itsumone-mark.png"
+        alt=""
+        class="footer-logo"
+      >
+
+      <div>
+        いつもね™ / Itsumone
+      </div>
+
+      <div>
+        © 2026 03 LLC
+      </div>
+
+    </div>
+
+  </footer>
+
+
+</body>
+</html>
