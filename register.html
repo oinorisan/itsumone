@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+  <!-- =========================================================
+       基本設定
+       ========================================================= -->
+
+  <!-- 文字コード -->
+  <meta charset="UTF-8">
+
+  <!-- スマートフォン表示 -->
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <!-- ページタイトル -->
+  <title>うちの子を登録する｜いつもね™</title>
+
+  <!-- ページ説明 -->
+  <meta
+    name="description"
+    content="いつもね™に、うちの子の名前、写真、誕生日、うちに来た日などを登録します。"
+  >
+
+  <!-- ブラウザのテーマカラー -->
+  <meta
+    name="theme-color"
+    content="#ffffff"
+  >
+
+
+  <!-- =========================================================
+       共通CSS
+       ========================================================= -->
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+
+  <!-- =========================================================
+       アイコン
+       ========================================================= -->
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="192x192"
+    href="icons/icon-192.png"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="icons/icon-192.png"
+  >
+
+
+  <!-- =========================================================
+       register.html 専用の小さなスタイル
+       
+       基本デザインは style.css にまとめています。
+       ここには、このページだけで使う要素だけを書きます。
+       後から style.css に移してもOKです。
+       ========================================================= -->
+
+  <style>
+
+    /* ---------------------------------------------------------
+       写真選択部分
+       --------------------------------------------------------- */
+
+    .photo-register {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    /* 写真がまだ無いときの丸い枠 */
+    .photo-preview {
+      width: 150px;
+      height: 150px;
+
+      margin: 0 auto 16px;
+
+      border-radius: 50%;
+
+      object-fit: cover;
+
+      background: #f1eeea;
+
+      border: 1px solid var(--line);
+    }
+
+    /* 写真選択ボタン */
+    .photo-button {
+      display: inline-block;
+
+      padding: 10px 20px;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: 999px;
+
+      cursor: pointer;
+    }
+
+    /* 本来のファイル選択欄は隠す */
+    .photo-input {
+      display: none;
+    }
+
+
+    /* ---------------------------------------------------------
+       任意項目表示
+       --------------------------------------------------------- */
+
+    .optional {
+      margin-left: 6px;
+
+      color: var(--subtext);
+
+      font-size: 12px;
+
+      font-weight: normal;
+    }
+
+
+    /* ---------------------------------------------------------
+       フォーム内の区切り
+       --------------------------------------------------------- */
+
+    .form-section-title {
+      margin: 38px 0 20px;
+
+      padding-top: 28px;
+
+      border-top: 1px solid var(--line);
+
+      font-size: 18px;
+
+      font-weight: 600;
+    }
+
+
+    /* ---------------------------------------------------------
+       登録ボタンエリア
+       --------------------------------------------------------- */
+
+    .form-actions {
+      margin-top: 38px;
+    }
+
+    .form-actions .btn {
+      width: 100%;
+
+      border: none;
+
+      cursor: pointer;
+    }
+
+    .back-link {
+      display: block;
+
+      margin-top: 18px;
+
+      text-align: center;
+
+      color: var(--subtext);
+
+      font-size: 14px;
+    }
+
+
+    /* ---------------------------------------------------------
+       登録完了メッセージ
+       --------------------------------------------------------- */
+
+    .save-message {
+      display: none;
+
+      margin-top: 22px;
+
+      padding: 16px 18px;
+
+      border-radius: 16px;
+
+      background: rgba(124, 82, 165, 0.08);
+
+      text-align: center;
+    }
+
+
+    /* ---------------------------------------------------------
+       「その他」の生き物入力欄
+       最初は非表示
+       --------------------------------------------------------- */
+
+    #species-other-wrap {
+      display: none;
+      margin-top: 12px;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================================================
+       ヘッダー
+       ========================================================= -->
+
+  <header>
+
+    <div class="container header-inner">
+
+      <!--
+        左側：ロゴ＋ブランド名
+      -->
+      <a
+        href="index.html"
+        class="brand"
+      >
+
+        <img
+          src="icons/icon-192.png"
+          alt="いつもね"
+          class="brand-mark"
+        >
+
+        <div class="brand-name">
+          いつもね<sup>™</sup>
+        </div>
+
+      </a>
+
+
+      <!--
+        将来メニューを開くためのボタン
+        現段階では表示のみ
+      -->
+      <button
+        class="menu-button"
+        aria-label="メニュー"
+        type="button"
+      >
+        ☰
+      </button>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- =========================================================
+       メイン
+       ========================================================= -->
+
+  <main>
+
+
+    <!-- =======================================================
+         ページタイトル
+         ======================================================= -->
+
+    <section class="page-hero">
+
+      <div class="container">
+
+        <!-- いつもね™のマーク -->
+        <img
+          src="icons/icon-192.png"
+          alt=""
+          class="page-logo"
+        >
+
+        <h1 class="page-title">
+          うちの子を登録する
+        </h1>
+
+        <p class="page-subtitle">
+          まずは、名前と写真から。
+          <br>
+          わかることだけで大丈夫です。
+        </p>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =======================================================
+         登録フォーム
+         ======================================================= -->
+
+    <section>
+
+      <div class="container">
+
+        <div class="form-wrap">
+
+          <!--
+            フォーム本体
+
+            現段階ではサーバーへ送信せず、
+            JavaScriptで localStorage に保存します。
+
+            そのため action は設定していません。
+          -->
+          <form
+            id="pet-form"
+            class="form-card"
+          >
+
+
+            <!-- =================================================
+                 写真
+                 ================================================= -->
+
+            <div class="photo-register">
+
+              <!--
+                最初はロゴを表示。
+                写真を選ぶと、その写真に切り替わります。
+              -->
+              <img
+                id="photo-preview"
+                src="icons/icon-192.png"
+                alt="うちの子の写真"
+                class="photo-preview"
+              >
+
+              <!--
+                labelをボタン風にしています。
+                クリックすると hidden の file input が開きます。
+              -->
+              <label
+                for="photo"
+                class="photo-button"
+              >
+                📷 写真を選ぶ
+              </label>
+
+              <input
+                type="file"
+                id="photo"
+                class="photo-input"
+                accept="image/*"
+              >
+
+              <p class="form-note">
+                あとから変更できます。
+              </p>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 基本プロフィール
+                 ================================================= -->
+
+            <div class="form-group">
+
+              <label
+                for="name"
+                class="form-label"
+              >
+                名前
+              </label>
+
+              <input
+                type="text"
+                id="name"
+                class="form-input"
+                placeholder="例：モモ"
+                required
+              >
+
+            </div>
+
+
+
+            <!-- 呼び名 -->
+            <div class="form-group">
+
+              <label
+                for="nickname"
+                class="form-label"
+              >
+                いつもの呼び名
+                <span class="optional">
+                  任意
+                </span>
+              </label>
+
+              <input
+                type="text"
+                id="nickname"
+                class="form-input"
+                placeholder="例：ももちゃん"
+              >
+
+              <p class="form-note">
+                普段呼んでいる名前を残せます。
+              </p>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 生き物の種類
+                 ================================================= -->
+
+            <div class="form-group">
+
+              <label
+                for="species"
+                class="form-label"
+              >
+                どんな子？
+              </label>
+
+              <!--
+                犬・猫だけに限定しません。
+                「その他」を選ぶと自由入力欄が出ます。
+              -->
+              <select
+                id="species"
+                class="form-select"
+              >
+
+                <option value="">
+                  選んでください
+                </option>
+
+                <option value="犬">
+                  犬
+                </option>
+
+                <option value="猫">
+                  猫
+                </option>
+
+                <option value="うさぎ">
+                  うさぎ
+                </option>
+
+                <option value="鳥">
+                  鳥
+                </option>
+
+                <option value="ハムスター">
+                  ハムスター
+                </option>
+
+                <option value="モルモット">
+                  モルモット
+                </option>
+
+                <option value="フェレット">
+                  フェレット
+                </option>
+
+                <option value="魚">
+                  魚
+                </option>
+
+                <option value="爬虫類">
+                  爬虫類
+                </option>
+
+                <option value="両生類">
+                  両生類
+                </option>
+
+                <option value="昆虫">
+                  昆虫
+                </option>
+
+                <option value="馬">
+                  馬
+                </option>
+
+                <option value="その他">
+                  その他
+                </option>
+
+              </select>
+
+
+              <!--
+                「その他」を選んだときだけ表示
+              -->
+              <div id="species-other-wrap">
+
+                <input
+                  type="text"
+                  id="species-other"
+                  class="form-input"
+                  placeholder="例：カメ、ヤギ、インコなど"
+                >
+
+              </div>
+
+            </div>
+
+
+
+            <!-- 種類・品種 -->
+            <div class="form-group">
+
+              <label
+                for="breed"
+                class="form-label"
+              >
+                種類・品種
+                <span class="optional">
+                  任意
+                </span>
+              </label>
+
+              <input
+                type="text"
+                id="breed"
+                class="form-input"
+                placeholder="例：柴犬、文鳥、ミックスなど"
+              >
+
+            </div>
+
+
+
+            <!-- 性別 -->
+            <div class="form-group">
+
+              <label
+                for="sex"
+                class="form-label"
+              >
+                性別
+                <span class="optional">
+                  任意
+                </span>
+              </label>
+
+              <select
+                id="sex"
+                class="form-select"
+              >
+
+                <option value="">
+                  選択しない
+                </option>
+
+                <option value="男の子">
+                  男の子
+                </option>
+
+                <option value="女の子">
+                  女の子
+                </option>
+
+                <option value="わからない">
+                  わからない
+                </option>
+
+                <option value="その他">
+                  その他
+                </option>
+
+              </select>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 大切な日
+                 ================================================= -->
+
+            <div class="form-section-title">
+              大切な日
+            </div>
+
+
+
+            <!-- 誕生日 -->
+            <div class="form-group">
+
+              <label
+                for="birthday"
+                class="form-label"
+              >
+                誕生日
+                <span class="optional">
+                  任意
+                </span>
+              </label>
+
+              <input
+                type="date"
+                id="birthday"
+                class="form-input"
+              >
+
+              <p class="form-note">
+                わからなければ空欄で大丈夫です。
+              </p>
+
+            </div>
+
+
+
+            <!-- うちに来た日 -->
+            <div class="form-group">
+
+              <label
+                for="welcome-day"
+                class="form-label"
+              >
+                うちに来た日
+                <span class="optional">
+                  任意
+                </span>
+              </label>
+
+              <input
+                type="date"
+                id="welcome-day"
+                class="form-input"
+              >
+
+              <p class="form-note">
+                「うちの子記念日」として残せます。
+              </p>
+
+            </div>
+
+
+
+            <!-- お別れした日 -->
+            <div class="form-group">
+
+              <label
+                for="farewell-day"
+                class="form-label"
+              >
+                お別れした日
+                <span class="optional">
+                  任意
+                </span>
+              </label>
+
+              <input
+                type="date"
+                id="farewell-day"
+                class="form-input"
+              >
+
+              <p class="form-note">
+                今も一緒に暮らしている場合は、
+                何も入力しなくて大丈夫です。
+              </p>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 その子らしさ
+                 ================================================= -->
+
+            <div class="form-section-title">
+              その子らしさ
+            </div>
+
+
+
+            <!-- 好きなもの -->
+            <div class="form-group">
+
+              <label
+                for="favorites"
+                class="form-label"
+              >
+                好きなもの
+                <span class="optional">
+                  任意
+                </span>
+              </label>
+
+              <textarea
+                id="favorites"
+                class="form-textarea"
+                placeholder="好きな食べ物、おやつ、おもちゃ、場所など"
+              ></textarea>
+
+            </div>
+
+
+
+            <!-- 性格・しぐさ -->
+            <div class="form-group">
+
+              <label
+                for="personality"
+                class="form-label"
+              >
+                性格・しぐさ
+                <span class="optional">
+                  任意
+                </span>
+              </label>
+
+              <textarea
+                id="personality"
+                class="form-textarea"
+                placeholder="甘えん坊、朝になると起こしに来る、窓辺が好き…など"
+              ></textarea>
+
+            </div>
+
+
+
+            <!-- 最初の思い出 -->
+            <div class="form-group">
+
+              <label
+                for="first-memory"
+                class="form-label"
+              >
+                最初に残しておきたいこと
+                <span class="optional">
+                  任意
+                </span>
+              </label>
+
+              <textarea
+                id="first-memory"
+                class="form-textarea"
+                placeholder="その子について、今残しておきたいことを自由に書いてください。"
+              ></textarea>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 登録ボタン
+                 ================================================= -->
+
+            <div class="form-actions">
+
+              <!--
+                submitするとJavaScriptが動き、
+                localStorageへ保存します。
+              -->
+              <button
+                type="submit"
+                class="btn btn-primary"
+              >
+                この子を登録する
+              </button>
+
+
+              <!-- トップへ戻る -->
+              <a
+                href="index.html"
+                class="back-link"
+              >
+                今は登録せず、トップへ戻る
+              </a>
+
+            </div>
+
+
+
+            <!--
+              登録完了後に表示するメッセージ
+            -->
+            <div
+              id="save-message"
+              class="save-message"
+            >
+              登録しました。
+              <br>
+              いつもね、一緒に。
+            </div>
+
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =========================================================
+       フッター
+       ========================================================= -->
+
+  <footer>
+
+    <div class="container">
+
+      <img
+        src="icons/icon-192.png"
+        alt=""
+        class="footer-logo"
+      >
+
+      <div>
+        いつもね™ / Itsumone
+      </div>
+
+      <div>
+        © 2026 03 LLC
+      </div>
+
+    </div>
+
+  </footer>
+
+
+
+  <!-- =========================================================
+       JavaScript
+       ========================================================= -->
+
+  <script>
+
+    /* =========================================================
+       使うHTML要素を取得
+       ========================================================= */
+
+    const form =
+      document.getElementById("pet-form");
+
+    const photoInput =
+      document.getElementById("photo");
+
+    const photoPreview =
+      document.getElementById("photo-preview");
+
+    const speciesSelect =
+      document.getElementById("species");
+
+    const speciesOtherWrap =
+      document.getElementById("species-other-wrap");
+
+    const saveMessage =
+      document.getElementById("save-message");
+
+
+    /* =========================================================
+       写真データ
+       
+       選んだ写真を縮小して、
+       localStorageへ保存できる形式にします。
+       ========================================================= */
+
+    let photoData = "";
+
+
+    /* =========================================================
+       写真を選んだとき
+       ========================================================= */
+
+    photoInput.addEventListener(
+      "change",
+      function () {
+
+        /* 選択されたファイル */
+        const file = this.files[0];
+
+
+        /* 何も選ばれていなければ終了 */
+        if (!file) {
+          return;
+        }
+
+
+        /* 画像ファイル以外なら終了 */
+        if (!file.type.startsWith("image/")) {
+
+          alert(
+            "画像ファイルを選んでください。"
+          );
+
+          return;
+        }
+
+
+        /* FileReaderで画像を読み込む */
+        const reader =
+          new FileReader();
+
+
+        reader.onload =
+          function (event) {
+
+            /* 一度Imageとして読み込む */
+            const image =
+              new Image();
+
+
+            image.onload =
+              function () {
+
+                /* ---------------------------------------------
+                   Canvasを使って画像を小さくします。
+
+                   localStorageは容量が小さいため、
+                   スマホ写真をそのまま保存すると
+                   入りきらない場合があります。
+                   --------------------------------------------- */
+
+                const canvas =
+                  document.createElement("canvas");
+
+                const ctx =
+                  canvas.getContext("2d");
+
+
+                /* 最大辺 */
+                const maxSize = 800;
+
+
+                let width =
+                  image.width;
+
+                let height =
+                  image.height;
+
+
+                /* 横長写真 */
+                if (
+                  width > height &&
+                  width > maxSize
+                ) {
+
+                  height =
+                    Math.round(
+                      height * maxSize / width
+                    );
+
+                  width =
+                    maxSize;
+                }
+
+
+                /* 縦長写真 */
+                if (
+                  height >= width &&
+                  height > maxSize
+                ) {
+
+                  width =
+                    Math.round(
+                      width * maxSize / height
+                    );
+
+                  height =
+                    maxSize;
+                }
+
+
+                /* Canvasサイズ */
+                canvas.width =
+                  width;
+
+                canvas.height =
+                  height;
+
+
+                /* Canvasへ描画 */
+                ctx.drawImage(
+                  image,
+                  0,
+                  0,
+                  width,
+                  height
+                );
+
+
+                /* JPEG形式へ変換 */
+                photoData =
+                  canvas.toDataURL(
+                    "image/jpeg",
+                    0.82
+                  );
+
+
+                /* プレビューへ表示 */
+                photoPreview.src =
+                  photoData;
+
+              };
+
+
+            image.src =
+              event.target.result;
+
+          };
+
+
+        reader.readAsDataURL(file);
+
+      }
+    );
+
+
+    /* =========================================================
+       生き物の種類
+       
+       「その他」が選ばれた場合だけ、
+       自由入力欄を表示します。
+       ========================================================= */
+
+    speciesSelect.addEventListener(
+      "change",
+      function () {
+
+        if (
+          this.value === "その他"
+        ) {
+
+          speciesOtherWrap.style.display =
+            "block";
+
+        } else {
+
+          speciesOtherWrap.style.display =
+            "none";
+
+        }
+
+      }
+    );
+
+
+    /* =========================================================
+       登録ボタンが押されたとき
+       ========================================================= */
+
+    form.addEventListener(
+      "submit",
+      function (event) {
+
+        /* ---------------------------------------------
+           通常のフォーム送信を止める
+           --------------------------------------------- */
+
+        event.preventDefault();
+
+
+        /* ---------------------------------------------
+           生き物の種類を決定
+           --------------------------------------------- */
+
+        let species =
+          document.getElementById("species").value;
+
+
+        /* 「その他」なら自由入力の値を使う */
+        if (
+          species === "その他"
+        ) {
+
+          const customSpecies =
+            document
+              .getElementById("species-other")
+              .value
+              .trim();
+
+
+          if (customSpecies) {
+
+            species =
+              customSpecies;
+
+          }
+
+        }
+
+
+        /* ---------------------------------------------
+           入力内容をひとつのオブジェクトにまとめる
+           --------------------------------------------- */
+
+        const pet = {
+
+          /* ID */
+          id:
+            Date.now(),
+
+          /* 名前 */
+          name:
+            document
+              .getElementById("name")
+              .value
+              .trim(),
+
+          /* 呼び名 */
+          nickname:
+            document
+              .getElementById("nickname")
+              .value
+              .trim(),
+
+          /* 生き物の種類 */
+          species:
+            species,
+
+          /* 品種 */
+          breed:
+            document
+              .getElementById("breed")
+              .value
+              .trim(),
+
+          /* 性別 */
+          sex:
+            document
+              .getElementById("sex")
+              .value,
+
+          /* 誕生日 */
+          birthday:
+            document
+              .getElementById("birthday")
+              .value,
+
+          /* うちに来た日 */
+          welcomeDay:
+            document
+              .getElementById("welcome-day")
+              .value,
+
+          /* お別れした日 */
+          farewellDay:
+            document
+              .getElementById("farewell-day")
+              .value,
+
+          /* 好きなもの */
+          favorites:
+            document
+              .getElementById("favorites")
+              .value
+              .trim(),
+
+          /* 性格・しぐさ */
+          personality:
+            document
+              .getElementById("personality")
+              .value
+              .trim(),
+
+          /* 最初の思い出 */
+          firstMemory:
+            document
+              .getElementById("first-memory")
+              .value
+              .trim(),
+
+          /* 写真 */
+          photo:
+            photoData,
+
+          /* 登録日時 */
+          createdAt:
+            new Date().toISOString()
+
+        };
+
+
+        /* ---------------------------------------------
+           localStorageから、
+           すでに登録済みの子を読み込む
+
+           将来的には複数登録できるように
+           配列で保存します。
+           --------------------------------------------- */
+
+        const existingPets =
+          JSON.parse(
+            localStorage.getItem(
+              "itsumonePets"
+            ) || "[]"
+          );
+
+
+        /* 新しい子を追加 */
+        existingPets.push(pet);
+
+
+        /* ---------------------------------------------
+           localStorageへ保存
+           --------------------------------------------- */
+
+        try {
+
+          localStorage.setItem(
+            "itsumonePets",
+            JSON.stringify(existingPets)
+          );
+
+
+          /* -------------------------------------------
+             現在選択中の子としてIDも保存
+
+             profile.html 側でこのIDを使えば、
+             登録直後の子を表示できます。
+             ------------------------------------------- */
+
+          localStorage.setItem(
+            "itsumoneCurrentPet",
+            String(pet.id)
+          );
+
+
+          /* 完了メッセージを表示 */
+          saveMessage.style.display =
+            "block";
+
+
+          /* -------------------------------------------
+             少し待ってからプロフィールへ移動
+             
+             profile.html がまだ無い場合は、
+             この部分を一時的にコメントアウトしてもOK。
+             ------------------------------------------- */
+
+          setTimeout(
+            function () {
+
+              window.location.href =
+                "profile.html";
+
+            },
+            900
+          );
+
+
+        } catch (error) {
+
+          /* -------------------------------------------
+             localStorage容量不足など
+             ------------------------------------------- */
+
+          console.error(error);
+
+
+          alert(
+            "保存できませんでした。\n" +
+            "写真の容量が大きい可能性があります。"
+          );
+
+        }
+
+      }
+    );
+
+  </script>
+
+
+</body>
+
+</html>
