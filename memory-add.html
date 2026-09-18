@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+  <!-- =========================================================
+       基本設定
+       ========================================================= -->
+
+  <!-- 文字コード -->
+  <meta charset="UTF-8">
+
+  <!-- スマートフォン対応 -->
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <!-- ページタイトル -->
+  <title>思い出を追加する｜いつもね™</title>
+
+  <!-- ページ説明 -->
+  <meta
+    name="description"
+    content="いつもね™に、うちの子との写真や出来事、場所などの思い出を追加します。"
+  >
+
+  <!-- ブラウザUIのテーマカラー -->
+  <meta
+    name="theme-color"
+    content="#ffffff"
+  >
+
+
+  <!-- =========================================================
+       共通CSS
+       ========================================================= -->
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+
+  <!-- =========================================================
+       アイコン
+       ========================================================= -->
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="192x192"
+    href="icons/icon-192.png"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="icons/icon-192.png"
+  >
+
+
+  <!-- =========================================================
+       memory-add.html 専用スタイル
+       ========================================================= -->
+
+  <style>
+
+    /* ---------------------------------------------------------
+       ページ全体
+       --------------------------------------------------------- */
+
+    .memory-add-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+
+    /* ---------------------------------------------------------
+       現在選択中のうちの子
+       --------------------------------------------------------- */
+
+    .current-pet-card {
+      display: flex;
+
+      align-items: center;
+
+      gap: 14px;
+
+      margin-bottom: 28px;
+
+      padding: 16px 18px;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius);
+    }
+
+
+    .current-pet-photo {
+      width: 64px;
+      height: 64px;
+
+      flex-shrink: 0;
+
+      border-radius: 50%;
+
+      object-fit: cover;
+
+      background: #f2efeb;
+
+      border: 1px solid var(--line);
+    }
+
+
+    .current-pet-name {
+      margin: 0;
+
+      font-size: 20px;
+
+      font-weight: 500;
+    }
+
+
+    .current-pet-sub {
+      margin-top: 3px;
+
+      color: var(--subtext);
+
+      font-size: 13px;
+    }
+
+
+    /* ---------------------------------------------------------
+       写真登録
+       --------------------------------------------------------- */
+
+    .memory-photo-area {
+      text-align: center;
+
+      margin-bottom: 28px;
+    }
+
+
+    .memory-photo-preview {
+      width: 100%;
+
+      max-width: 420px;
+
+      aspect-ratio: 4 / 3;
+
+      margin: 0 auto 14px;
+
+      object-fit: cover;
+
+      background: #f2efeb;
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius-small);
+    }
+
+
+    .memory-photo-button {
+      display: inline-block;
+
+      padding: 10px 18px;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: 999px;
+
+      cursor: pointer;
+    }
+
+
+    .memory-photo-input {
+      display: none;
+    }
+
+
+    /* ---------------------------------------------------------
+       任意表示
+       --------------------------------------------------------- */
+
+    .optional {
+      margin-left: 6px;
+
+      color: var(--subtext);
+
+      font-size: 12px;
+
+      font-weight: normal;
+    }
+
+
+    /* ---------------------------------------------------------
+       カテゴリボタン
+       --------------------------------------------------------- */
+
+    .category-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, 1fr);
+
+      gap: 10px;
+    }
+
+
+    .category-option {
+      position: relative;
+    }
+
+
+    .category-option input {
+      position: absolute;
+
+      opacity: 0;
+
+      pointer-events: none;
+    }
+
+
+    .category-option label {
+      display: block;
+
+      padding: 12px 14px;
+
+      text-align: center;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: 14px;
+
+      cursor: pointer;
+
+      transition: 0.2s;
+    }
+
+
+    .category-option input:checked + label {
+      border-color: var(--purple);
+
+      background:
+        rgba(124, 82, 165, 0.08);
+    }
+
+
+    /* ---------------------------------------------------------
+       保存ボタン
+       --------------------------------------------------------- */
+
+    .form-actions {
+      margin-top: 34px;
+    }
+
+
+    .form-actions .btn {
+      width: 100%;
+
+      border: none;
+
+      cursor: pointer;
+    }
+
+
+    .back-link {
+      display: block;
+
+      margin-top: 16px;
+
+      text-align: center;
+
+      color: var(--subtext);
+
+      font-size: 14px;
+    }
+
+
+    /* ---------------------------------------------------------
+       保存完了メッセージ
+       --------------------------------------------------------- */
+
+    .save-message {
+      display: none;
+
+      margin-top: 20px;
+
+      padding: 16px 18px;
+
+      text-align: center;
+
+      background:
+        rgba(124, 82, 165, 0.08);
+
+      border-radius: var(--radius-small);
+    }
+
+
+    /* ---------------------------------------------------------
+       登録データがない場合
+       --------------------------------------------------------- */
+
+    .empty-state {
+      padding: 42px 24px;
+
+      text-align: center;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius);
+    }
+
+
+    .empty-state img {
+      width: 100px;
+
+      margin: 0 auto 18px;
+    }
+
+
+    .empty-state h2 {
+      margin: 0 0 10px;
+
+      font-size: 23px;
+
+      font-weight: 500;
+    }
+
+
+    .empty-state p {
+      margin: 0 0 24px;
+
+      color: var(--subtext);
+    }
+
+
+    /* ---------------------------------------------------------
+       PC表示
+       --------------------------------------------------------- */
+
+    @media (min-width: 700px) {
+
+      .category-grid {
+        grid-template-columns:
+          repeat(3, 1fr);
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================================================
+       ヘッダー
+       ========================================================= -->
+
+  <header>
+
+    <div class="container header-inner">
+
+      <!-- ロゴ＋ブランド名 -->
+      <a
+        href="index.html"
+        class="brand"
+      >
+
+        <img
+          src="icons/icon-192.png"
+          alt="いつもね"
+          class="brand-mark"
+        >
+
+        <div class="brand-name">
+          いつもね<sup>™</sup>
+        </div>
+
+      </a>
+
+
+      <!-- 将来メニュー用 -->
+      <button
+        class="menu-button"
+        aria-label="メニュー"
+        type="button"
+      >
+        ☰
+      </button>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- =========================================================
+       メイン
+       ========================================================= -->
+
+  <main>
+
+
+    <!-- =======================================================
+         ページタイトル
+         ======================================================= -->
+
+    <section class="page-hero">
+
+      <div class="container">
+
+        <img
+          src="icons/icon-192.png"
+          alt=""
+          class="page-logo"
+        >
+
+        <h1 class="page-title">
+          思い出を追加する
+        </h1>
+
+        <p class="page-subtitle">
+          写真でも、出来事でも、
+          何気ない一日でも。
+        </p>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =======================================================
+         登録フォーム
+         ======================================================= -->
+
+    <section>
+
+      <div class="container">
+
+        <div
+          id="memory-add-root"
+          class="memory-add-wrap"
+        >
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =========================================================
+       フッター
+       ========================================================= -->
+
+  <footer>
+
+    <div class="container">
+
+      <img
+        src="icons/icon-192.png"
+        alt=""
+        class="footer-logo"
+      >
+
+      <div>
+        いつもね™ / Itsumone
+      </div>
+
+      <div>
+        © 2026 03 LLC
+      </div>
+
+    </div>
+
+  </footer>
+
+
+
+  <!-- =========================================================
+       JavaScript
+       ========================================================= -->
+
+  <script>
+
+    /* =========================================================
+       localStorageから「うちの子」データを読む
+       ========================================================= */
+
+    const pets =
+      JSON.parse(
+        localStorage.getItem("itsumonePets") || "[]"
+      );
+
+
+    /* 現在選択中のうちの子ID */
+    const currentPetId =
+      localStorage.getItem("itsumoneCurrentPet");
+
+
+    /* 表示先 */
+    const memoryAddRoot =
+      document.getElementById("memory-add-root");
+
+
+    /* =========================================================
+       HTMLエスケープ
+       ========================================================= */
+
+    function escapeHtml(value) {
+
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+    }
+
+
+    /* =========================================================
+       現在選択中のうちの子を取得
+       ========================================================= */
+
+    function getCurrentPet() {
+
+      /* 登録なし */
+      if (pets.length === 0) {
+        return null;
+      }
+
+
+      /* currentPetId がある場合 */
+      if (currentPetId) {
+
+        const found =
+          pets.find(
+            pet =>
+              String(pet.id) ===
+              String(currentPetId)
+          );
+
+
+        if (found) {
+          return found;
+        }
+
+      }
+
+
+      /* 見つからなければ最後に登録した子 */
+      return pets[pets.length - 1];
+
+    }
+
+
+    /* =========================================================
+       ページを組み立てる
+       ========================================================= */
+
+    function renderPage() {
+
+      const pet =
+        getCurrentPet();
+
+
+      /* ---------------------------------------------------------
+         うちの子がまだ登録されていない場合
+         --------------------------------------------------------- */
+
+      if (!pet) {
+
+        memoryAddRoot.innerHTML = `
+
+          <div class="empty-state">
+
+            <img
+              src="icons/icon-192.png"
+              alt=""
+            >
+
+            <h2>
+              まだ、うちの子が登録されていません。
+            </h2>
+
+            <p>
+              思い出を残す前に、
+              まずプロフィールを登録しましょう。
+            </p>
+
+            <a
+              href="register.html"
+              class="btn btn-primary"
+            >
+              うちの子を登録する
+            </a>
+
+          </div>
+
+        `;
+
+        return;
+      }
+
+
+      /* ---------------------------------------------------------
+         写真
+         --------------------------------------------------------- */
+
+      const photo =
+        pet.photo
+          ? pet.photo
+          : "icons/icon-192.png";
+
+
+      /* ---------------------------------------------------------
+         ページ本体
+         --------------------------------------------------------- */
+
+      memoryAddRoot.innerHTML = `
+
+        <!-- ================================================
+             現在選択中のうちの子
+             ================================================ -->
+
+        <div class="current-pet-card">
+
+          <img
+            src="${photo}"
+            alt="${escapeHtml(pet.name)}の写真"
+            class="current-pet-photo"
+          >
+
+          <div>
+
+            <h2 class="current-pet-name">
+              ${escapeHtml(pet.name)}
+            </h2>
+
+            <div class="current-pet-sub">
+              この子の思い出を追加します
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- ================================================
+             思い出登録フォーム
+             ================================================ -->
+
+        <form
+          id="memory-form"
+          class="form-card"
+        >
+
+
+          <!-- ==============================================
+               写真
+               ============================================== -->
+
+          <div class="memory-photo-area">
+
+            <!--
+              写真未選択時は
+              いつもね™のアイコンを表示
+            -->
+            <img
+              id="memory-photo-preview"
+              src="icons/icon-512.png"
+              alt="思い出の写真"
+              class="memory-photo-preview"
+            >
+
+            <!-- 写真選択ボタン -->
+            <label
+              for="memory-photo"
+              class="memory-photo-button"
+            >
+              📷 写真を選ぶ
+            </label>
+
+            <!-- 実際のファイル入力欄 -->
+            <input
+              type="file"
+              id="memory-photo"
+              class="memory-photo-input"
+              accept="image/*"
+            >
+
+            <p class="form-note">
+              写真がなくても登録できます。
+            </p>
+
+          </div>
+
+
+
+          <!-- ==============================================
+               日付
+               ============================================== -->
+
+          <div class="form-group">
+
+            <label
+              for="memory-date"
+              class="form-label"
+            >
+              日付
+              <span class="optional">
+                任意
+              </span>
+            </label>
+
+            <input
+              type="date"
+              id="memory-date"
+              class="form-input"
+            >
+
+            <p class="form-note">
+              正確な日付がわからなければ、
+              空欄でも大丈夫です。
+            </p>
+
+          </div>
+
+
+
+          <!-- ==============================================
+               タイトル
+               ============================================== -->
+
+          <div class="form-group">
+
+            <label
+              for="memory-title"
+              class="form-label"
+            >
+              タイトル
+            </label>
+
+            <input
+              type="text"
+              id="memory-title"
+              class="form-input"
+              placeholder="例：はじめて海に行った日"
+              required
+            >
+
+          </div>
+
+
+
+          <!-- ==============================================
+               カテゴリ
+               ============================================== -->
+
+          <div class="form-group">
+
+            <div class="form-label">
+              カテゴリ
+              <span class="optional">
+                任意
+              </span>
+            </div>
+
+
+            <div class="category-grid">
+
+              <!-- 日常 -->
+              <div class="category-option">
+
+                <input
+                  type="radio"
+                  name="memory-category"
+                  id="category-daily"
+                  value="日常"
+                >
+
+                <label for="category-daily">
+                  ☀️ 日常
+                </label>
+
+              </div>
+
+
+              <!-- おでかけ -->
+              <div class="category-option">
+
+                <input
+                  type="radio"
+                  name="memory-category"
+                  id="category-outing"
+                  value="おでかけ"
+                >
+
+                <label for="category-outing">
+                  🚶 おでかけ
+                </label>
+
+              </div>
+
+
+              <!-- 記念日 -->
+              <div class="category-option">
+
+                <input
+                  type="radio"
+                  name="memory-category"
+                  id="category-anniversary"
+                  value="記念日"
+                >
+
+                <label for="category-anniversary">
+                  🎂 記念日
+                </label>
+
+              </div>
+
+
+              <!-- 食べもの -->
+              <div class="category-option">
+
+                <input
+                  type="radio"
+                  name="memory-category"
+                  id="category-food"
+                  value="食べもの"
+                >
+
+                <label for="category-food">
+                  🍪 食べもの
+                </label>
+
+              </div>
+
+
+              <!-- 遊び -->
+              <div class="category-option">
+
+                <input
+                  type="radio"
+                  name="memory-category"
+                  id="category-play"
+                  value="遊び"
+                >
+
+                <label for="category-play">
+                  🧸 遊び
+                </label>
+
+              </div>
+
+
+              <!-- その他 -->
+              <div class="category-option">
+
+                <input
+                  type="radio"
+                  name="memory-category"
+                  id="category-other"
+                  value="その他"
+                >
+
+                <label for="category-other">
+                  🐾 その他
+                </label>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- ==============================================
+               場所
+               ============================================== -->
+
+          <div class="form-group">
+
+            <label
+              for="memory-place"
+              class="form-label"
+            >
+              場所
+              <span class="optional">
+                任意
+              </span>
+            </label>
+
+            <input
+              type="text"
+              id="memory-place"
+              class="form-input"
+              placeholder="例：いつもの公園、家の庭、清里高原など"
+            >
+
+            <p class="form-note">
+              将来的には地図と連携できるようにします。
+            </p>
+
+          </div>
+
+
+
+          <!-- ==============================================
+               思い出本文
+               ============================================== -->
+
+          <div class="form-group">
+
+            <label
+              for="memory-text"
+              class="form-label"
+            >
+              思い出
+              <span class="optional">
+                任意
+              </span>
+            </label>
+
+            <textarea
+              id="memory-text"
+              class="form-textarea"
+              placeholder="その日の出来事、しぐさ、会話、感じたことなどを自由に残してください。"
+            ></textarea>
+
+          </div>
+
+
+
+          <!-- ==============================================
+               保存ボタン
+               ============================================== -->
+
+          <div class="form-actions">
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+            >
+              この思い出を残す
+            </button>
+
+
+            <a
+              href="memories.html"
+              class="back-link"
+            >
+              思い出一覧へ戻る
+            </a>
+
+          </div>
+
+
+
+          <!-- 保存完了メッセージ -->
+          <div
+            id="save-message"
+            class="save-message"
+          >
+            思い出を保存しました。
+            <br>
+            またひとつ、大切な時間が残りました。
+          </div>
+
+
+        </form>
+
+      `;
+
+
+      /* ---------------------------------------------------------
+         フォームを組み立てたあと、
+         イベントを設定
+         --------------------------------------------------------- */
+
+      setupMemoryForm(pet);
+
+    }
+
+
+    /* =========================================================
+       フォーム機能を設定
+       ========================================================= */
+
+    function setupMemoryForm(pet) {
+
+      /* フォーム */
+      const form =
+        document.getElementById("memory-form");
+
+
+      /* 写真入力 */
+      const photoInput =
+        document.getElementById("memory-photo");
+
+
+      /* 写真プレビュー */
+      const photoPreview =
+        document.getElementById("memory-photo-preview");
+
+
+      /* 保存メッセージ */
+      const saveMessage =
+        document.getElementById("save-message");
+
+
+      /* ---------------------------------------------------------
+         写真データ
+         --------------------------------------------------------- */
+
+      let photoData = "";
+
+
+      /* ---------------------------------------------------------
+         写真を選んだとき
+         --------------------------------------------------------- */
+
+      photoInput.addEventListener(
+        "change",
+        function () {
+
+          const file =
+            this.files[0];
+
+
+          /* 何も選ばれていない */
+          if (!file) {
+            return;
+          }
+
+
+          /* 画像以外 */
+          if (!file.type.startsWith("image/")) {
+
+            alert(
+              "画像ファイルを選んでください。"
+            );
+
+            return;
+          }
+
+
+          const reader =
+            new FileReader();
+
+
+          reader.onload =
+            function (event) {
+
+              const image =
+                new Image();
+
+
+              image.onload =
+                function () {
+
+                  /* -------------------------------------------
+                     localStorage用に画像を縮小
+                     ------------------------------------------- */
+
+                  const canvas =
+                    document.createElement("canvas");
+
+
+                  const ctx =
+                    canvas.getContext("2d");
+
+
+                  /* 最大辺 */
+                  const maxSize = 1200;
+
+
+                  let width =
+                    image.width;
+
+
+                  let height =
+                    image.height;
+
+
+                  /* 横長 */
+                  if (
+                    width > height &&
+                    width > maxSize
+                  ) {
+
+                    height =
+                      Math.round(
+                        height * maxSize / width
+                      );
+
+                    width =
+                      maxSize;
+
+                  }
+
+
+                  /* 縦長 */
+                  if (
+                    height >= width &&
+                    height > maxSize
+                  ) {
+
+                    width =
+                      Math.round(
+                        width * maxSize / height
+                      );
+
+                    height =
+                      maxSize;
+
+                  }
+
+
+                  /* Canvasサイズ */
+                  canvas.width =
+                    width;
+
+                  canvas.height =
+                    height;
+
+
+                  /* Canvasへ描画 */
+                  ctx.drawImage(
+                    image,
+                    0,
+                    0,
+                    width,
+                    height
+                  );
+
+
+                  /* JPEGへ変換 */
+                  photoData =
+                    canvas.toDataURL(
+                      "image/jpeg",
+                      0.82
+                    );
+
+
+                  /* プレビュー */
+                  photoPreview.src =
+                    photoData;
+
+                };
+
+
+              image.src =
+                event.target.result;
+
+            };
+
+
+          reader.readAsDataURL(file);
+
+        }
+      );
+
+
+      /* ---------------------------------------------------------
+         保存処理
+         --------------------------------------------------------- */
+
+      form.addEventListener(
+        "submit",
+        function (event) {
+
+          /* 通常のフォーム送信を止める */
+          event.preventDefault();
+
+
+          /* -------------------------------------------
+             カテゴリを取得
+             ------------------------------------------- */
+
+          const selectedCategory =
+            document.querySelector(
+              'input[name="memory-category"]:checked'
+            );
+
+
+          const category =
+            selectedCategory
+              ? selectedCategory.value
+              : "";
+
+
+          /* -------------------------------------------
+             思い出オブジェクト
+             ------------------------------------------- */
+
+          const memory = {
+
+            /* 一意のID */
+            id:
+              Date.now(),
+
+            /* どの子の思い出か */
+            petId:
+              pet.id,
+
+            /* 日付 */
+            date:
+              document
+                .getElementById("memory-date")
+                .value,
+
+            /* タイトル */
+            title:
+              document
+                .getElementById("memory-title")
+                .value
+                .trim(),
+
+            /* カテゴリ */
+            category:
+              category,
+
+            /* 場所 */
+            place:
+              document
+                .getElementById("memory-place")
+                .value
+                .trim(),
+
+            /* 本文 */
+            text:
+              document
+                .getElementById("memory-text")
+                .value
+                .trim(),
+
+            /* 写真 */
+            photo:
+              photoData,
+
+            /* 登録日時 */
+            createdAt:
+              new Date().toISOString()
+
+          };
+
+
+          /* -------------------------------------------
+             既存の思い出を読む
+             ------------------------------------------- */
+
+          const memories =
+            JSON.parse(
+              localStorage.getItem(
+                "itsumoneMemories"
+              ) || "[]"
+            );
+
+
+          /* 新しい思い出を追加 */
+          memories.push(memory);
+
+
+          /* -------------------------------------------
+             保存
+             ------------------------------------------- */
+
+          try {
+
+            localStorage.setItem(
+              "itsumoneMemories",
+              JSON.stringify(memories)
+            );
+
+
+            /* 完了メッセージ */
+            saveMessage.style.display =
+              "block";
+
+
+            /* -----------------------------------------
+               少し待って思い出一覧へ戻る
+               ----------------------------------------- */
+
+            setTimeout(
+              function () {
+
+                window.location.href =
+                  "memories.html";
+
+              },
+              900
+            );
+
+
+          } catch (error) {
+
+            console.error(error);
+
+
+            alert(
+              "保存できませんでした。\n" +
+              "写真の容量が大きい可能性があります。"
+            );
+
+          }
+
+        }
+      );
+
+    }
+
+
+    /* =========================================================
+       初回表示
+       ========================================================= */
+
+    renderPage();
+
+  </script>
+
+
+</body>
+
+</html>
