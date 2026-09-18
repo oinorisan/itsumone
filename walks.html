@@ -1,1 +1,1577 @@
+<!DOCTYPE html>
+<html lang="ja">
 
+<head>
+
+  <!-- =========================================================
+       基本設定
+       ========================================================= -->
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>散歩コース｜いつもね™</title>
+
+  <meta
+    name="description"
+    content="いつもね™に、うちの子と一緒に歩いた散歩コースや思い出の道を残します。"
+  >
+
+  <meta
+    name="theme-color"
+    content="#ffffff"
+  >
+
+
+  <!-- =========================================================
+       共通CSS
+       ========================================================= -->
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+
+  <!-- =========================================================
+       アイコン
+       ========================================================= -->
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="192x192"
+    href="icons/icon-192.png"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="icons/icon-192.png"
+  >
+
+
+  <!-- =========================================================
+       walks.html 専用CSS
+       ========================================================= -->
+
+  <style>
+
+    /* ---------------------------------------------------------
+       ページ全体
+       --------------------------------------------------------- */
+
+    .walks-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+
+    /* ---------------------------------------------------------
+       現在のうちの子
+       --------------------------------------------------------- */
+
+    .current-pet {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      margin-bottom: 30px;
+
+      padding: 18px 20px;
+
+      background: white;
+
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+
+    .current-pet-photo {
+      width: 72px;
+      height: 72px;
+
+      flex-shrink: 0;
+
+      border-radius: 50%;
+
+      object-fit: cover;
+
+      background: #f2efeb;
+
+      border: 1px solid var(--line);
+    }
+
+
+    .current-pet-info {
+      flex: 1;
+    }
+
+
+    .current-pet-name {
+      margin: 0;
+
+      font-size: 22px;
+      font-weight: 500;
+    }
+
+
+    .current-pet-sub {
+      margin-top: 4px;
+
+      color: var(--subtext);
+
+      font-size: 13px;
+    }
+
+
+    /* ---------------------------------------------------------
+       ページ説明
+       --------------------------------------------------------- */
+
+    .walks-message {
+      margin-bottom: 34px;
+
+      padding: 28px;
+
+      text-align: center;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(83, 121, 198, 0.06),
+          rgba(124, 82, 165, 0.06),
+          rgba(217, 87, 121, 0.06)
+        );
+
+      border-radius: var(--radius);
+    }
+
+
+    .walks-message h2 {
+      margin: 0 0 10px;
+
+      font-size: 22px;
+      font-weight: 500;
+    }
+
+
+    .walks-message p {
+      margin: 0;
+
+      color: var(--subtext);
+
+      line-height: 1.9;
+    }
+
+
+    /* ---------------------------------------------------------
+       セクション見出し
+       --------------------------------------------------------- */
+
+    .walk-section {
+      margin-top: 38px;
+    }
+
+
+    .walk-section-title {
+      margin: 0 0 16px;
+
+      font-size: 21px;
+      font-weight: 600;
+    }
+
+
+    /* ---------------------------------------------------------
+       散歩コース一覧
+       --------------------------------------------------------- */
+
+    .walk-list {
+      display: grid;
+
+      gap: 22px;
+    }
+
+
+    /* ---------------------------------------------------------
+       コースカード
+       --------------------------------------------------------- */
+
+    .walk-card {
+      overflow: hidden;
+
+      background: white;
+
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+
+    /* 写真 */
+    .walk-photo {
+      width: 100%;
+
+      aspect-ratio: 4 / 3;
+
+      object-fit: cover;
+
+      background: #f2efeb;
+    }
+
+
+    /* 本文 */
+    .walk-body {
+      padding: 22px;
+    }
+
+
+    /* ---------------------------------------------------------
+       上部メタ情報
+       --------------------------------------------------------- */
+
+    .walk-meta {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 8px;
+
+      margin-bottom: 10px;
+    }
+
+
+    .walk-badge {
+      display: inline-block;
+
+      padding: 4px 9px;
+
+      border-radius: 999px;
+
+      background: #f4f1ee;
+
+      color: var(--subtext);
+
+      font-size: 12px;
+    }
+
+
+    /* ---------------------------------------------------------
+       コース名
+       --------------------------------------------------------- */
+
+    .walk-title {
+      margin: 0 0 14px;
+
+      font-size: 21px;
+
+      font-weight: 600;
+    }
+
+
+    /* ---------------------------------------------------------
+       コース情報
+       --------------------------------------------------------- */
+
+    .walk-info {
+      display: grid;
+
+      gap: 10px;
+
+      margin-bottom: 16px;
+    }
+
+
+    .walk-info-row {
+      display: grid;
+
+      grid-template-columns: 90px 1fr;
+
+      gap: 10px;
+    }
+
+
+    .walk-info-label {
+      color: var(--subtext);
+
+      font-size: 13px;
+    }
+
+
+    .walk-info-value {
+      font-size: 14px;
+    }
+
+
+    /* ---------------------------------------------------------
+       スタート → ゴール
+       --------------------------------------------------------- */
+
+    .walk-route {
+      margin: 18px 0;
+
+      padding: 16px;
+
+      background: #faf8f5;
+
+      border-radius: var(--radius-small);
+    }
+
+
+    .walk-route-point {
+      display: flex;
+
+      gap: 10px;
+
+      align-items: flex-start;
+    }
+
+
+    .walk-route-icon {
+      width: 24px;
+
+      flex-shrink: 0;
+
+      text-align: center;
+    }
+
+
+    .walk-route-line {
+      width: 2px;
+      height: 24px;
+
+      margin: 4px 0 4px 11px;
+
+      background: var(--line);
+    }
+
+
+    /* ---------------------------------------------------------
+       思い出スポット
+       --------------------------------------------------------- */
+
+    .walk-spots {
+      margin-top: 18px;
+
+      padding-top: 18px;
+
+      border-top: 1px solid var(--line);
+    }
+
+
+    .walk-spots-title {
+      margin: 0 0 10px;
+
+      font-size: 14px;
+
+      font-weight: 600;
+    }
+
+
+    .walk-spot-list {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 8px;
+    }
+
+
+    .walk-spot {
+      padding: 6px 10px;
+
+      background: #f4f1ee;
+
+      border-radius: 999px;
+
+      color: var(--subtext);
+
+      font-size: 12px;
+    }
+
+
+    /* ---------------------------------------------------------
+       思い出本文
+       --------------------------------------------------------- */
+
+    .walk-memory {
+      margin-top: 18px;
+
+      color: var(--subtext);
+
+      line-height: 1.9;
+
+      white-space: pre-wrap;
+    }
+
+
+    /* ---------------------------------------------------------
+       編集・削除
+       --------------------------------------------------------- */
+
+    .walk-card-actions {
+      display: flex;
+
+      gap: 10px;
+
+      margin-top: 20px;
+    }
+
+
+    .walk-action-btn {
+      flex: 1;
+
+      padding: 10px 14px;
+
+      text-align: center;
+
+      border-radius: 999px;
+
+      font-size: 14px;
+
+      cursor: pointer;
+    }
+
+
+    .walk-edit-btn {
+      background: white;
+
+      border: 1px solid var(--line);
+    }
+
+
+    .walk-delete-btn {
+      color: #a94b4b;
+
+      background: white;
+
+      border: 1px solid #e8caca;
+    }
+
+
+    .walk-delete-btn:hover {
+      background: #fff6f6;
+    }
+
+
+    /* ---------------------------------------------------------
+       コース未登録
+       --------------------------------------------------------- */
+
+    .no-walks {
+      padding: 40px 24px;
+
+      text-align: center;
+
+      background: white;
+
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+
+    .no-walks-icon {
+      margin-bottom: 12px;
+
+      font-size: 44px;
+    }
+
+
+    .no-walks h2 {
+      margin: 0 0 10px;
+
+      font-size: 21px;
+      font-weight: 500;
+    }
+
+
+    .no-walks p {
+      margin: 0 0 24px;
+
+      color: var(--subtext);
+    }
+
+
+    /* ---------------------------------------------------------
+       下部操作
+       --------------------------------------------------------- */
+
+    .walks-actions {
+      display: grid;
+
+      gap: 12px;
+
+      margin-top: 36px;
+    }
+
+
+    /* ---------------------------------------------------------
+       うちの子未登録
+       --------------------------------------------------------- */
+
+    .empty-state {
+      padding: 42px 24px;
+
+      text-align: center;
+
+      background: white;
+
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+
+    .empty-state img {
+      width: 100px;
+
+      margin: 0 auto 18px;
+    }
+
+
+    .empty-state h2 {
+      margin: 0 0 10px;
+
+      font-size: 23px;
+      font-weight: 500;
+    }
+
+
+    .empty-state p {
+      margin: 0 0 24px;
+
+      color: var(--subtext);
+    }
+
+
+    /* ---------------------------------------------------------
+       スマートフォン調整
+       --------------------------------------------------------- */
+
+    @media (max-width: 520px) {
+
+      .walk-info-row {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================================================
+       ヘッダー
+       ========================================================= -->
+
+  <header>
+
+    <div class="container header-inner">
+
+      <a
+        href="index.html"
+        class="brand"
+      >
+
+        <img
+          src="icons/icon-192.png"
+          alt="いつもね"
+          class="brand-mark"
+        >
+
+        <div class="brand-name">
+          いつもね<sup>™</sup>
+        </div>
+
+      </a>
+
+
+      <button
+        class="menu-button"
+        aria-label="メニュー"
+        type="button"
+      >
+        ☰
+      </button>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- =========================================================
+       メイン
+       ========================================================= -->
+
+  <main>
+
+
+    <!-- =======================================================
+         ページタイトル
+         ======================================================= -->
+
+    <section class="page-hero">
+
+      <div class="container">
+
+        <img
+          src="icons/icon-192.png"
+          alt=""
+          class="page-logo"
+        >
+
+        <h1 class="page-title">
+          散歩コース
+        </h1>
+
+        <p class="page-subtitle">
+          一緒に歩いた道を、
+          そのまま思い出に。
+        </p>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =======================================================
+         散歩コース一覧
+         ======================================================= -->
+
+    <section>
+
+      <div class="container">
+
+        <div
+          id="walks-root"
+          class="walks-wrap"
+        >
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =========================================================
+       フッター
+       ========================================================= -->
+
+  <footer>
+
+    <div class="container">
+
+      <img
+        src="icons/icon-192.png"
+        alt=""
+        class="footer-logo"
+      >
+
+      <div>
+        いつもね™ / Itsumone
+      </div>
+
+      <div>
+        © 2026 03 LLC
+      </div>
+
+    </div>
+
+  </footer>
+
+
+
+  <!-- =========================================================
+       JavaScript
+       ========================================================= -->
+
+  <script>
+
+    /* =========================================================
+       うちの子一覧
+       ========================================================= */
+
+    const pets =
+      JSON.parse(
+        localStorage.getItem("itsumonePets") || "[]"
+      );
+
+
+    /* =========================================================
+       現在選択中のうちの子ID
+       ========================================================= */
+
+    const currentPetId =
+      localStorage.getItem("itsumoneCurrentPet");
+
+
+    /* =========================================================
+       表示先
+       ========================================================= */
+
+    const walksRoot =
+      document.getElementById("walks-root");
+
+
+    /* =========================================================
+       HTMLエスケープ
+       ========================================================= */
+
+    function escapeHtml(value) {
+
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+    }
+
+
+    /* =========================================================
+       現在のうちの子
+       ========================================================= */
+
+    function getCurrentPet() {
+
+      if (pets.length === 0) {
+        return null;
+      }
+
+
+      if (currentPetId) {
+
+        const found =
+          pets.find(
+            pet =>
+              String(pet.id) ===
+              String(currentPetId)
+          );
+
+
+        if (found) {
+          return found;
+        }
+
+      }
+
+
+      return pets[pets.length - 1];
+
+    }
+
+
+    /* =========================================================
+       全散歩コースを取得
+       ========================================================= */
+
+    function getAllWalks() {
+
+      return JSON.parse(
+        localStorage.getItem("itsumoneWalks") || "[]"
+      );
+
+    }
+
+
+    /* =========================================================
+       現在の子のコースだけ取得
+       ========================================================= */
+
+    function getPetWalks(pet) {
+
+      const walks =
+        getAllWalks();
+
+
+      return walks.filter(
+        walk =>
+          String(walk.petId) ===
+          String(pet.id)
+      );
+
+    }
+
+
+    /* =========================================================
+       新しい順に並べる
+       ========================================================= */
+
+    function sortWalks(walks) {
+
+      return [...walks].sort(
+        (a, b) =>
+          new Date(b.createdAt || 0) -
+          new Date(a.createdAt || 0)
+      );
+
+    }
+
+
+    /* =========================================================
+       コース削除
+       ========================================================= */
+
+    function deleteWalk(walkId) {
+
+      const ok =
+        confirm(
+          "この散歩コースを削除しますか？\n\n" +
+          "削除した内容は元に戻せません。"
+        );
+
+
+      if (!ok) {
+        return;
+      }
+
+
+      const walks =
+        getAllWalks();
+
+
+      const updatedWalks =
+        walks.filter(
+          walk =>
+            String(walk.id) !==
+            String(walkId)
+        );
+
+
+      localStorage.setItem(
+        "itsumoneWalks",
+        JSON.stringify(updatedWalks)
+      );
+
+
+      renderWalks();
+
+    }
+
+
+    /* =========================================================
+       場所IDから場所名を取得
+       
+       将来、散歩コースに
+       itsumonePlaces のIDを紐づけます。
+       ========================================================= */
+
+    function getPlaceName(placeId) {
+
+      if (!placeId) {
+        return "";
+      }
+
+
+      const places =
+        JSON.parse(
+          localStorage.getItem("itsumonePlaces") || "[]"
+        );
+
+
+      const place =
+        places.find(
+          item =>
+            String(item.id) ===
+            String(placeId)
+        );
+
+
+      return place
+        ? place.name
+        : "";
+
+    }
+
+
+    /* =========================================================
+       散歩コースカードを作る
+       ========================================================= */
+
+    function buildWalksHtml(pet) {
+
+      const petWalks =
+        sortWalks(
+          getPetWalks(pet)
+        );
+
+
+      /* ---------------------------------------------------------
+         コース未登録
+         --------------------------------------------------------- */
+
+      if (petWalks.length === 0) {
+
+        return `
+
+          <div class="walk-section">
+
+            <h2 class="walk-section-title">
+              散歩の記録
+            </h2>
+
+            <div class="no-walks">
+
+              <div class="no-walks-icon">
+                🐾
+              </div>
+
+              <h2>
+                まだ散歩コースがありません。
+              </h2>
+
+              <p>
+                毎日歩いた道。
+                <br>
+                季節ごとに変えたコース。
+                <br>
+                よく立ち止まった場所。
+                <br><br>
+                一緒に歩いた道そのものを、
+                思い出として残してみましょう。
+              </p>
+
+              <a
+                href="walk-add.html"
+                class="btn btn-primary"
+              >
+                最初の散歩コースを登録する
+              </a>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+
+
+      /* ---------------------------------------------------------
+         カード作成
+         --------------------------------------------------------- */
+
+      const cardsHtml =
+        petWalks
+          .map(
+            walk => {
+
+              /* ---------------------------------------------
+                 写真
+                 --------------------------------------------- */
+
+              const photoHtml =
+                walk.photo
+                  ? `
+                    <img
+                      src="${walk.photo}"
+                      alt="${escapeHtml(walk.name)}"
+                      class="walk-photo"
+                    >
+                  `
+                  : "";
+
+
+              /* ---------------------------------------------
+                 距離
+                 --------------------------------------------- */
+
+              const distanceHtml =
+                walk.distance
+                  ? `
+                    <span class="walk-badge">
+                      📏 ${escapeHtml(walk.distance)} km
+                    </span>
+                  `
+                  : "";
+
+
+              /* ---------------------------------------------
+                 所要時間
+                 --------------------------------------------- */
+
+              const durationHtml =
+                walk.duration
+                  ? `
+                    <span class="walk-badge">
+                      ⏱ ${escapeHtml(walk.duration)}分
+                    </span>
+                  `
+                  : "";
+
+
+              /* ---------------------------------------------
+                 時期
+                 --------------------------------------------- */
+
+              const seasonHtml =
+                walk.season
+                  ? `
+                    <span class="walk-badge">
+                      ${escapeHtml(walk.season)}
+                    </span>
+                  `
+                  : "";
+
+
+              /* ---------------------------------------------
+                 スタート地点
+                 --------------------------------------------- */
+
+              const startName =
+                walk.startPlaceId
+                  ? getPlaceName(walk.startPlaceId)
+                  : walk.startName || "";
+
+
+              /* ---------------------------------------------
+                 ゴール地点
+                 --------------------------------------------- */
+
+              const endName =
+                walk.endPlaceId
+                  ? getPlaceName(walk.endPlaceId)
+                  : walk.endName || "";
+
+
+              /* ---------------------------------------------
+                 ルート表示
+                 --------------------------------------------- */
+
+              let routeHtml = "";
+
+
+              if (
+                startName ||
+                endName
+              ) {
+
+                routeHtml = `
+
+                  <div class="walk-route">
+
+                    <!-- スタート -->
+                    <div class="walk-route-point">
+
+                      <div class="walk-route-icon">
+                        🟢
+                      </div>
+
+                      <div>
+                        ${escapeHtml(
+                          startName || "スタート地点"
+                        )}
+                      </div>
+
+                    </div>
+
+
+                    <!-- 縦線 -->
+                    <div class="walk-route-line"></div>
+
+
+                    <!-- ゴール -->
+                    <div class="walk-route-point">
+
+                      <div class="walk-route-icon">
+                        🏁
+                      </div>
+
+                      <div>
+                        ${escapeHtml(
+                          endName || "ゴール地点"
+                        )}
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                `;
+
+              }
+
+
+              /* ---------------------------------------------
+                 思い出スポット
+                 --------------------------------------------- */
+
+              let spotsHtml = "";
+
+
+              if (
+                Array.isArray(walk.spotIds) &&
+                walk.spotIds.length > 0
+              ) {
+
+                const spotNames =
+                  walk.spotIds
+                    .map(
+                      placeId =>
+                        getPlaceName(placeId)
+                    )
+                    .filter(Boolean);
+
+
+                if (spotNames.length > 0) {
+
+                  spotsHtml = `
+
+                    <div class="walk-spots">
+
+                      <h4 class="walk-spots-title">
+                        途中の思い出スポット
+                      </h4>
+
+                      <div class="walk-spot-list">
+
+                        ${spotNames
+                          .map(
+                            name => `
+                              <span class="walk-spot">
+                                📍 ${escapeHtml(name)}
+                              </span>
+                            `
+                          )
+                          .join("")
+                        }
+
+                      </div>
+
+                    </div>
+
+                  `;
+
+                }
+
+              }
+
+
+              /* ---------------------------------------------
+                 思い出本文
+                 --------------------------------------------- */
+
+              const memoryHtml =
+                walk.memory
+                  ? `
+                    <p class="walk-memory">
+                      ${escapeHtml(walk.memory)}
+                    </p>
+                  `
+                  : "";
+
+
+              /* ---------------------------------------------
+                 編集URL
+                 --------------------------------------------- */
+
+              const editUrl =
+                `walk-edit.html?id=${encodeURIComponent(walk.id)}`;
+
+
+              /* ---------------------------------------------
+                 カード
+                 --------------------------------------------- */
+
+              return `
+
+                <article class="walk-card">
+
+                  ${photoHtml}
+
+
+                  <div class="walk-body">
+
+
+                    <!-- 距離・時間・時期 -->
+                    <div class="walk-meta">
+
+                      ${distanceHtml}
+
+                      ${durationHtml}
+
+                      ${seasonHtml}
+
+                    </div>
+
+
+                    <!-- コース名 -->
+                    <h3 class="walk-title">
+                      ${escapeHtml(walk.name)}
+                    </h3>
+
+
+                    <!-- 補足情報 -->
+                    <div class="walk-info">
+
+
+                      ${
+                        walk.frequency
+                          ? `
+                            <div class="walk-info-row">
+
+                              <div class="walk-info-label">
+                                よく歩いた頻度
+                              </div>
+
+                              <div class="walk-info-value">
+                                ${escapeHtml(walk.frequency)}
+                              </div>
+
+                            </div>
+                          `
+                          : ""
+                      }
+
+
+                      ${
+                        walk.timeOfDay
+                          ? `
+                            <div class="walk-info-row">
+
+                              <div class="walk-info-label">
+                                時間帯
+                              </div>
+
+                              <div class="walk-info-value">
+                                ${escapeHtml(walk.timeOfDay)}
+                              </div>
+
+                            </div>
+                          `
+                          : ""
+                      }
+
+
+                    </div>
+
+
+                    <!-- スタート→ゴール -->
+                    ${routeHtml}
+
+
+                    <!-- 途中のスポット -->
+                    ${spotsHtml}
+
+
+                    <!-- 思い出 -->
+                    ${memoryHtml}
+
+
+                    <!-- 編集・削除 -->
+                    <div class="walk-card-actions">
+
+                      <a
+                        href="${editUrl}"
+                        class="walk-action-btn walk-edit-btn"
+                      >
+                        編集
+                      </a>
+
+
+                      <button
+                        type="button"
+                        class="walk-action-btn walk-delete-btn"
+                        data-walk-id="${walk.id}"
+                      >
+                        削除
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                </article>
+
+              `;
+
+            }
+          )
+          .join("");
+
+
+      return `
+
+        <div class="walk-section">
+
+          <h2 class="walk-section-title">
+            散歩の記録
+          </h2>
+
+          <div class="walk-list">
+
+            ${cardsHtml}
+
+          </div>
+
+        </div>
+
+      `;
+
+    }
+
+
+    /* =========================================================
+       メイン表示
+       ========================================================= */
+
+    function renderWalks() {
+
+      const pet =
+        getCurrentPet();
+
+
+      /* ---------------------------------------------------------
+         うちの子未登録
+         --------------------------------------------------------- */
+
+      if (!pet) {
+
+        walksRoot.innerHTML = `
+
+          <div class="empty-state">
+
+            <img
+              src="icons/icon-192.png"
+              alt=""
+            >
+
+            <h2>
+              まだ、うちの子が登録されていません。
+            </h2>
+
+            <p>
+              散歩コースを残す前に、
+              まずプロフィールを登録しましょう。
+            </p>
+
+            <a
+              href="register.html"
+              class="btn btn-primary"
+            >
+              うちの子を登録する
+            </a>
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      /* ---------------------------------------------------------
+         プロフィール写真
+         --------------------------------------------------------- */
+
+      const photo =
+        pet.photo
+          ? pet.photo
+          : "icons/icon-192.png";
+
+
+      /* ---------------------------------------------------------
+         サブ情報
+         --------------------------------------------------------- */
+
+      const subParts = [];
+
+
+      if (pet.species) {
+
+        subParts.push(
+          escapeHtml(pet.species)
+        );
+
+      }
+
+
+      if (pet.nickname) {
+
+        subParts.push(
+          `呼び名：${escapeHtml(pet.nickname)}`
+        );
+
+      }
+
+
+      const subText =
+        subParts.join("・");
+
+
+      /* ---------------------------------------------------------
+         散歩コース一覧
+         --------------------------------------------------------- */
+
+      const walksHtml =
+        buildWalksHtml(pet);
+
+
+      /* ---------------------------------------------------------
+         ページ全体
+         --------------------------------------------------------- */
+
+      walksRoot.innerHTML = `
+
+        <!-- ================================================
+             現在のうちの子
+             ================================================ -->
+
+        <div class="current-pet">
+
+          <img
+            src="${photo}"
+            alt="${escapeHtml(pet.name)}の写真"
+            class="current-pet-photo"
+          >
+
+          <div class="current-pet-info">
+
+            <h2 class="current-pet-name">
+              ${escapeHtml(pet.name)}
+            </h2>
+
+            ${
+              subText
+                ? `
+                  <div class="current-pet-sub">
+                    ${subText}
+                  </div>
+                `
+                : ""
+            }
+
+          </div>
+
+        </div>
+
+
+
+        <!-- ================================================
+             説明
+             ================================================ -->
+
+        <div class="walks-message">
+
+          <h2>
+            一緒に歩いた道を、残しておく。
+          </h2>
+
+          <p>
+            毎朝歩いた道も、
+            夕方の散歩コースも、
+            季節ごとに変わった道も。
+            <br>
+            一本道ではない「一緒に過ごした時間」を、
+            コースとして残します。
+          </p>
+
+        </div>
+
+
+
+        <!-- ================================================
+             散歩コース一覧
+             ================================================ -->
+
+        ${walksHtml}
+
+
+
+        <!-- ================================================
+             下部操作
+             ================================================ -->
+
+        <div class="walks-actions">
+
+          <a
+            href="walk-add.html"
+            class="btn btn-primary"
+          >
+            散歩コースを追加する
+          </a>
+
+          <a
+            href="places.html"
+            class="btn btn-secondary"
+          >
+            思い出の場所を見る
+          </a>
+
+          <a
+            href="memories.html"
+            class="btn btn-secondary"
+          >
+            思い出を見る
+          </a>
+
+          <a
+            href="profile.html"
+            class="btn btn-secondary"
+          >
+            プロフィールを見る
+          </a>
+
+        </div>
+
+      `;
+
+
+      /* ---------------------------------------------------------
+         削除ボタン
+         --------------------------------------------------------- */
+
+      const deleteButtons =
+        document.querySelectorAll(
+          ".walk-delete-btn"
+        );
+
+
+      deleteButtons.forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            function () {
+
+              const walkId =
+                this.dataset.walkId;
+
+
+              deleteWalk(walkId);
+
+            }
+          );
+
+        }
+      );
+
+    }
+
+
+    /* =========================================================
+       初回表示
+       ========================================================= */
+
+    renderWalks();
+
+  </script>
+
+
+</body>
+
+</html>
