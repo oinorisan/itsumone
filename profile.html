@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+  <!-- =========================================================
+       基本設定
+       ========================================================= -->
+
+  <!-- 文字コード -->
+  <meta charset="UTF-8">
+
+  <!-- スマートフォン対応 -->
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <!-- ページタイトル -->
+  <title>うちの子プロフィール｜いつもね™</title>
+
+  <!-- ページ説明 -->
+  <meta
+    name="description"
+    content="いつもね™に登録した、うちの子のプロフィールを表示します。"
+  >
+
+  <!-- ブラウザUI色 -->
+  <meta
+    name="theme-color"
+    content="#ffffff"
+  >
+
+
+  <!-- =========================================================
+       共通CSS
+       ========================================================= -->
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+
+  <!-- =========================================================
+       アイコン
+       ========================================================= -->
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="192x192"
+    href="icons/icon-192.png"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="icons/icon-192.png"
+  >
+
+
+  <!-- =========================================================
+       profile.html 専用スタイル
+       ========================================================= -->
+
+  <style>
+
+    /* ---------------------------------------------------------
+       プロフィール全体
+       --------------------------------------------------------- */
+
+    .profile-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+
+    /* ---------------------------------------------------------
+       プロフィール写真
+       --------------------------------------------------------- */
+
+    .profile-main-photo {
+      width: 180px;
+      height: 180px;
+
+      margin: 0 auto 20px;
+
+      border-radius: 50%;
+
+      object-fit: cover;
+
+      background: #f2efeb;
+
+      border: 1px solid var(--line);
+    }
+
+
+    /* ---------------------------------------------------------
+       呼び名
+       --------------------------------------------------------- */
+
+    .profile-nickname {
+      margin-top: 4px;
+
+      color: var(--subtext);
+
+      font-size: 15px;
+    }
+
+
+    /* ---------------------------------------------------------
+       種類・品種など
+       --------------------------------------------------------- */
+
+    .profile-tags {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      justify-content: center;
+
+      gap: 8px;
+
+      margin-top: 18px;
+    }
+
+    .profile-tag {
+      padding: 6px 12px;
+
+      border-radius: 999px;
+
+      background: #f5f2ef;
+
+      color: var(--subtext);
+
+      font-size: 13px;
+    }
+
+
+    /* ---------------------------------------------------------
+       情報カード
+       --------------------------------------------------------- */
+
+    .info-card {
+      margin-top: 22px;
+
+      padding: 26px;
+
+      background: white;
+
+      border-radius: var(--radius);
+
+      border: 1px solid var(--line);
+    }
+
+
+    .info-card h2 {
+      margin: 0 0 20px;
+
+      font-size: 20px;
+
+      font-weight: 600;
+    }
+
+
+    /* ---------------------------------------------------------
+       情報一覧
+       --------------------------------------------------------- */
+
+    .info-list {
+      display: grid;
+
+      gap: 16px;
+    }
+
+    .info-row {
+      display: grid;
+
+      grid-template-columns: 120px 1fr;
+
+      gap: 12px;
+
+      align-items: start;
+    }
+
+    .info-label {
+      color: var(--subtext);
+
+      font-size: 14px;
+    }
+
+    .info-value {
+      word-break: break-word;
+    }
+
+
+    /* ---------------------------------------------------------
+       長文用
+       --------------------------------------------------------- */
+
+    .text-block {
+      white-space: pre-wrap;
+
+      line-height: 1.9;
+    }
+
+
+    /* ---------------------------------------------------------
+       ボタン群
+       --------------------------------------------------------- */
+
+    .profile-actions {
+      display: grid;
+
+      gap: 12px;
+
+      margin-top: 30px;
+    }
+
+
+    /* ---------------------------------------------------------
+       うちの子切り替え
+       --------------------------------------------------------- */
+
+    .pet-switcher {
+      margin-bottom: 28px;
+
+      padding: 18px;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius-small);
+    }
+
+    .pet-switcher label {
+      display: block;
+
+      margin-bottom: 8px;
+
+      font-size: 14px;
+
+      color: var(--subtext);
+    }
+
+
+    /* ---------------------------------------------------------
+       データが無い場合
+       --------------------------------------------------------- */
+
+    .empty-state {
+      max-width: 560px;
+
+      margin: 0 auto;
+
+      padding: 44px 26px;
+
+      text-align: center;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius);
+    }
+
+    .empty-state img {
+      width: 110px;
+
+      margin: 0 auto 22px;
+    }
+
+    .empty-state h2 {
+      margin: 0 0 12px;
+
+      font-size: 24px;
+
+      font-weight: 500;
+    }
+
+    .empty-state p {
+      margin: 0 0 26px;
+
+      color: var(--subtext);
+    }
+
+
+    /* ---------------------------------------------------------
+       スマホ調整
+       --------------------------------------------------------- */
+
+    @media (max-width: 520px) {
+
+      .info-row {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+
+      .info-label {
+        font-size: 12px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================================================
+       ヘッダー
+       ========================================================= -->
+
+  <header>
+
+    <div class="container header-inner">
+
+      <!-- ロゴ＋ブランド名 -->
+      <a
+        href="index.html"
+        class="brand"
+      >
+
+        <img
+          src="icons/icon-192.png"
+          alt="いつもね"
+          class="brand-mark"
+        >
+
+        <div class="brand-name">
+          いつもね<sup>™</sup>
+        </div>
+
+      </a>
+
+
+      <!-- 将来メニュー用 -->
+      <button
+        class="menu-button"
+        aria-label="メニュー"
+        type="button"
+      >
+        ☰
+      </button>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- =========================================================
+       メイン
+       ========================================================= -->
+
+  <main>
+
+
+    <!-- =======================================================
+         ページタイトル
+         ======================================================= -->
+
+    <section class="page-hero">
+
+      <div class="container">
+
+        <img
+          src="icons/icon-192.png"
+          alt=""
+          class="page-logo"
+        >
+
+        <h1 class="page-title">
+          うちの子
+        </h1>
+
+        <p class="page-subtitle">
+          いつもね、一緒に。
+        </p>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =======================================================
+         プロフィール本体
+         ======================================================= -->
+
+    <section>
+
+      <div class="container">
+
+        <!--
+          JavaScriptで中身をここへ入れます。
+        -->
+        <div
+          id="profile-root"
+          class="profile-wrap"
+        >
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =========================================================
+       フッター
+       ========================================================= -->
+
+  <footer>
+
+    <div class="container">
+
+      <img
+        src="icons/icon-192.png"
+        alt=""
+        class="footer-logo"
+      >
+
+      <div>
+        いつもね™ / Itsumone
+      </div>
+
+      <div>
+        © 2026 03 LLC
+      </div>
+
+    </div>
+
+  </footer>
+
+
+
+  <!-- =========================================================
+       JavaScript
+       ========================================================= -->
+
+  <script>
+
+    /* =========================================================
+       localStorageから登録データを読む
+       ========================================================= */
+
+    const pets =
+      JSON.parse(
+        localStorage.getItem("itsumonePets") || "[]"
+      );
+
+
+    /* =========================================================
+       現在選択中の子のIDを読む
+       ========================================================= */
+
+    const currentPetId =
+      localStorage.getItem("itsumoneCurrentPet");
+
+
+    /* =========================================================
+       表示先
+       ========================================================= */
+
+    const profileRoot =
+      document.getElementById("profile-root");
+
+
+    /* =========================================================
+       HTMLエスケープ関数
+       
+       ユーザーが入力した文字列を
+       そのままHTMLとして解釈しないようにします。
+       ========================================================= */
+
+    function escapeHtml(value) {
+
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+    }
+
+
+    /* =========================================================
+       日付表示を日本語に整える
+       
+       例：
+       2020-04-12
+       ↓
+       2020年4月12日
+       ========================================================= */
+
+    function formatDate(dateString) {
+
+      /* 空欄なら「未登録」 */
+      if (!dateString) {
+        return "未登録";
+      }
+
+
+      const date =
+        new Date(
+          dateString + "T00:00:00"
+        );
+
+
+      /* 不正な日付なら元の文字列 */
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+
+        return dateString;
+
+      }
+
+
+      return (
+        date.getFullYear() +
+        "年" +
+        (date.getMonth() + 1) +
+        "月" +
+        date.getDate() +
+        "日"
+      );
+
+    }
+
+
+    /* =========================================================
+       現在の子を探す
+       ========================================================= */
+
+    function getCurrentPet() {
+
+      /* 登録が無ければ null */
+      if (pets.length === 0) {
+        return null;
+      }
+
+
+      /* currentPetId がある場合 */
+      if (currentPetId) {
+
+        const found =
+          pets.find(
+            pet =>
+              String(pet.id) ===
+              String(currentPetId)
+          );
+
+
+        if (found) {
+          return found;
+        }
+
+      }
+
+
+      /* 見つからなければ最後に登録した子 */
+      return pets[pets.length - 1];
+
+    }
+
+
+    /* =========================================================
+       プロフィール表示
+       ========================================================= */
+
+    function renderProfile() {
+
+      const pet =
+        getCurrentPet();
+
+
+      /* ---------------------------------------------------------
+         登録データが無い場合
+         --------------------------------------------------------- */
+
+      if (!pet) {
+
+        profileRoot.innerHTML = `
+
+          <div class="empty-state">
+
+            <img
+              src="icons/icon-192.png"
+              alt=""
+            >
+
+            <h2>
+              まだ、うちの子が登録されていません。
+            </h2>
+
+            <p>
+              まずは名前と写真から、
+              少しずつ記録を始めてみましょう。
+            </p>
+
+            <a
+              href="register.html"
+              class="btn btn-primary"
+            >
+              うちの子を登録する
+            </a>
+
+          </div>
+
+        `;
+
+        return;
+      }
+
+
+      /* ---------------------------------------------------------
+         写真
+         
+         写真が登録されていない場合は
+         いつもね™のアイコンを表示します。
+         --------------------------------------------------------- */
+
+      const photo =
+        pet.photo
+          ? pet.photo
+          : "icons/icon-192.png";
+
+
+      /* ---------------------------------------------------------
+         呼び名
+         --------------------------------------------------------- */
+
+      const nicknameHtml =
+        pet.nickname
+          ? `
+            <div class="profile-nickname">
+              ${escapeHtml(pet.nickname)}
+            </div>
+          `
+          : "";
+
+
+      /* ---------------------------------------------------------
+         タグ
+         --------------------------------------------------------- */
+
+      const tags = [];
+
+
+      if (pet.species) {
+        tags.push(
+          escapeHtml(pet.species)
+        );
+      }
+
+
+      if (pet.breed) {
+        tags.push(
+          escapeHtml(pet.breed)
+        );
+      }
+
+
+      if (pet.sex) {
+        tags.push(
+          escapeHtml(pet.sex)
+        );
+      }
+
+
+      const tagsHtml =
+        tags.length > 0
+          ? `
+            <div class="profile-tags">
+              ${tags
+                .map(
+                  tag =>
+                    `<span class="profile-tag">${tag}</span>`
+                )
+                .join("")
+              }
+            </div>
+          `
+          : "";
+
+
+      /* ---------------------------------------------------------
+         複数登録がある場合の切り替え
+         --------------------------------------------------------- */
+
+      let switcherHtml = "";
+
+
+      if (pets.length > 1) {
+
+        switcherHtml = `
+
+          <div class="pet-switcher">
+
+            <label for="pet-switch">
+              表示するうちの子
+            </label>
+
+            <select
+              id="pet-switch"
+              class="form-select"
+            >
+
+              ${pets
+                .map(
+                  item => `
+
+                    <option
+                      value="${item.id}"
+                      ${
+                        String(item.id) ===
+                        String(pet.id)
+                          ? "selected"
+                          : ""
+                      }
+                    >
+
+                      ${escapeHtml(item.name)}
+
+                    </option>
+
+                  `
+                )
+                .join("")
+              }
+
+            </select>
+
+          </div>
+
+        `;
+
+      }
+
+
+      /* ---------------------------------------------------------
+         プロフィール本体
+         --------------------------------------------------------- */
+
+      profileRoot.innerHTML = `
+
+        ${switcherHtml}
+
+
+        <div class="profile-card">
+
+          <img
+            src="${photo}"
+            alt="${escapeHtml(pet.name)}の写真"
+            class="profile-main-photo"
+          >
+
+          <div class="profile-name">
+            ${escapeHtml(pet.name)}
+          </div>
+
+          ${nicknameHtml}
+
+          ${tagsHtml}
+
+        </div>
+
+
+
+        <div class="info-card">
+
+          <h2>
+            大切な日
+          </h2>
+
+          <div class="info-list">
+
+            <div class="info-row">
+
+              <div class="info-label">
+                誕生日
+              </div>
+
+              <div class="info-value">
+                ${formatDate(pet.birthday)}
+              </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+              <div class="info-label">
+                うちに来た日
+              </div>
+
+              <div class="info-value">
+                ${formatDate(pet.welcomeDay)}
+              </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+              <div class="info-label">
+                お別れした日
+              </div>
+
+              <div class="info-value">
+                ${formatDate(pet.farewellDay)}
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <div class="info-card">
+
+          <h2>
+            その子らしさ
+          </h2>
+
+          <div class="info-list">
+
+            <div class="info-row">
+
+              <div class="info-label">
+                好きなもの
+              </div>
+
+              <div class="info-value text-block">
+                ${
+                  pet.favorites
+                    ? escapeHtml(pet.favorites)
+                    : "まだ登録されていません。"
+                }
+              </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+              <div class="info-label">
+                性格・しぐさ
+              </div>
+
+              <div class="info-value text-block">
+                ${
+                  pet.personality
+                    ? escapeHtml(pet.personality)
+                    : "まだ登録されていません。"
+                }
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <div class="info-card">
+
+          <h2>
+            思い出
+          </h2>
+
+          <div class="text-block">
+
+            ${
+              pet.firstMemory
+                ? escapeHtml(pet.firstMemory)
+                : "まだ思い出は登録されていません。"
+            }
+
+          </div>
+
+        </div>
+
+
+
+        <div class="profile-actions">
+
+          <a
+            href="memories.html"
+            class="btn btn-primary"
+          >
+            思い出を見る
+          </a>
+
+          <a
+            href="register.html"
+            class="btn btn-secondary"
+          >
+            もう一人、うちの子を登録する
+          </a>
+
+          <a
+            href="index.html"
+            class="btn btn-secondary"
+          >
+            トップへ戻る
+          </a>
+
+        </div>
+
+      `;
+
+
+      /* ---------------------------------------------------------
+         切り替え用selectのイベント
+         --------------------------------------------------------- */
+
+      const petSwitch =
+        document.getElementById("pet-switch");
+
+
+      if (petSwitch) {
+
+        petSwitch.addEventListener(
+          "change",
+          function () {
+
+            /* 選んだ子を current にする */
+            localStorage.setItem(
+              "itsumoneCurrentPet",
+              this.value
+            );
+
+
+            /* ページを再読み込み */
+            location.reload();
+
+          }
+        );
+
+      }
+
+    }
+
+
+    /* =========================================================
+       初回表示
+       ========================================================= */
+
+    renderProfile();
+
+  </script>
+
+
+</body>
+
+</html>
