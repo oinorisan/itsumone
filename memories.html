@@ -19,10 +19,10 @@
   <!-- ページタイトル -->
   <title>思い出｜いつもね™</title>
 
-  <!-- ページ説明 -->
+  <!-- 検索エンジン向け説明 -->
   <meta
     name="description"
-    content="いつもね™に登録した、うちの子との思い出や記念日を振り返るアーカイブページです。"
+    content="いつもね™に登録した、うちの子との思い出や写真、記念日を振り返るアーカイブページです。"
   >
 
   <!-- ブラウザUIのテーマカラー -->
@@ -60,7 +60,7 @@
 
 
   <!-- =========================================================
-       memories.html 専用スタイル
+       memories.html 専用CSS
        ========================================================= -->
 
   <style>
@@ -76,14 +76,12 @@
 
 
     /* ---------------------------------------------------------
-       現在のうちの子
+       現在選択中のうちの子
        --------------------------------------------------------- */
 
     .current-pet {
       display: flex;
-
       align-items: center;
-
       gap: 16px;
 
       margin-bottom: 30px;
@@ -93,12 +91,10 @@
       background: white;
 
       border: 1px solid var(--line);
-
       border-radius: var(--radius);
     }
 
 
-    /* 丸いプロフィール写真 */
     .current-pet-photo {
       width: 72px;
       height: 72px;
@@ -115,7 +111,6 @@
     }
 
 
-    /* 名前部分 */
     .current-pet-info {
       flex: 1;
     }
@@ -125,7 +120,6 @@
       margin: 0;
 
       font-size: 22px;
-
       font-weight: 500;
     }
 
@@ -144,7 +138,7 @@
        --------------------------------------------------------- */
 
     .memory-section {
-      margin-top: 36px;
+      margin-top: 38px;
     }
 
 
@@ -152,20 +146,62 @@
       margin: 0 0 16px;
 
       font-size: 21px;
-
       font-weight: 600;
     }
 
 
     /* ---------------------------------------------------------
-       タイムライン
+       写真
+       --------------------------------------------------------- */
+
+    .main-photo-card {
+      overflow: hidden;
+
+      background: white;
+
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+
+    .main-photo-image {
+      width: 100%;
+
+      aspect-ratio: 4 / 3;
+
+      object-fit: cover;
+
+      background: #f2efeb;
+    }
+
+
+    .main-photo-body {
+      padding: 20px;
+    }
+
+
+    .main-photo-body h3 {
+      margin: 0 0 6px;
+
+      font-size: 18px;
+    }
+
+
+    .main-photo-body p {
+      margin: 0;
+
+      color: var(--subtext);
+    }
+
+
+    /* ---------------------------------------------------------
+       基本プロフィール由来のタイムライン
        --------------------------------------------------------- */
 
     .timeline {
       position: relative;
 
       margin: 0;
-
       padding: 0;
 
       list-style: none;
@@ -179,8 +215,8 @@
       position: absolute;
 
       left: 13px;
-      top: 10px;
-      bottom: 10px;
+      top: 8px;
+      bottom: 8px;
 
       width: 2px;
 
@@ -188,7 +224,6 @@
     }
 
 
-    /* 1項目 */
     .timeline-item {
       position: relative;
 
@@ -198,7 +233,6 @@
     }
 
 
-    /* 丸いポイント */
     .timeline-dot {
       position: absolute;
 
@@ -223,14 +257,12 @@
     }
 
 
-    /* タイムラインカード */
     .timeline-card {
       padding: 20px;
 
       background: white;
 
       border: 1px solid var(--line);
-
       border-radius: var(--radius-small);
     }
 
@@ -248,7 +280,6 @@
       margin: 0 0 6px;
 
       font-size: 18px;
-
       font-weight: 600;
     }
 
@@ -263,7 +294,7 @@
 
 
     /* ---------------------------------------------------------
-       思い出カード
+       その子らしさカード
        --------------------------------------------------------- */
 
     .memory-grid {
@@ -279,7 +310,6 @@
       background: white;
 
       border: 1px solid var(--line);
-
       border-radius: var(--radius);
     }
 
@@ -307,24 +337,29 @@
     }
 
 
-    /* ---------------------------------------------------------
-       写真カード
-       --------------------------------------------------------- */
+    /* =========================================================
+       追加された思い出
+       ========================================================= */
 
-    .photo-memory-card {
+    .added-memory-list {
+      display: grid;
+
+      gap: 20px;
+    }
+
+
+    .added-memory-card {
       overflow: hidden;
-
-      padding: 0;
 
       background: white;
 
       border: 1px solid var(--line);
-
       border-radius: var(--radius);
     }
 
 
-    .photo-memory-image {
+    /* 思い出写真 */
+    .added-memory-photo {
       width: 100%;
 
       aspect-ratio: 4 / 3;
@@ -335,20 +370,86 @@
     }
 
 
-    .photo-memory-body {
-      padding: 20px;
+    .added-memory-body {
+      padding: 22px;
     }
 
 
-    .photo-memory-body h3 {
-      margin: 0 0 6px;
+    /* 日付とカテゴリ */
+    .added-memory-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
 
-      font-size: 18px;
+      margin-bottom: 10px;
     }
 
 
-    .photo-memory-body p {
+    .memory-date-badge,
+    .memory-category-badge,
+    .memory-place-badge {
+      display: inline-block;
+
+      padding: 4px 9px;
+
+      border-radius: 999px;
+
+      background: #f4f1ee;
+
+      color: var(--subtext);
+
+      font-size: 12px;
+    }
+
+
+    /* タイトル */
+    .added-memory-title {
+      margin: 0 0 10px;
+
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+
+    /* 本文 */
+    .added-memory-text {
       margin: 0;
+
+      color: var(--subtext);
+
+      line-height: 1.9;
+
+      white-space: pre-wrap;
+    }
+
+
+    /* ---------------------------------------------------------
+       日付不明の表示
+       --------------------------------------------------------- */
+
+    .unknown-date {
+      opacity: 0.8;
+    }
+
+
+    /* ---------------------------------------------------------
+       思い出がまだない場合
+       --------------------------------------------------------- */
+
+    .no-memories {
+      padding: 34px 24px;
+
+      text-align: center;
+
+      background: white;
+
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+
+    .no-memories p {
+      margin: 0 0 22px;
 
       color: var(--subtext);
     }
@@ -363,23 +464,22 @@
 
       gap: 12px;
 
-      margin-top: 34px;
+      margin-top: 36px;
     }
 
 
     /* ---------------------------------------------------------
-       データが無い場合
+       登録データがない場合
        --------------------------------------------------------- */
 
     .empty-state {
-      padding: 38px 24px;
+      padding: 42px 24px;
 
       text-align: center;
 
       background: white;
 
       border: 1px solid var(--line);
-
       border-radius: var(--radius);
     }
 
@@ -394,8 +494,7 @@
     .empty-state h2 {
       margin: 0 0 10px;
 
-      font-size: 22px;
-
+      font-size: 23px;
       font-weight: 500;
     }
 
@@ -436,7 +535,9 @@
 
     <div class="container header-inner">
 
-      <!-- ロゴ＋ブランド名 -->
+      <!--
+        ロゴ＋ブランド名
+      -->
       <a
         href="index.html"
         class="brand"
@@ -455,7 +556,10 @@
       </a>
 
 
-      <!-- 将来メニュー用 -->
+      <!--
+        将来のメニュー用ボタン
+        現段階では表示のみ
+      -->
       <button
         class="menu-button"
         aria-label="メニュー"
@@ -514,6 +618,10 @@
 
       <div class="container">
 
+        <!--
+          JavaScriptでここに
+          現在のうちの子の思い出を表示します。
+        -->
         <div
           id="memories-root"
           class="memories-wrap"
@@ -564,7 +672,7 @@
   <script>
 
     /* =========================================================
-       保存データを読み込む
+       localStorageから「うちの子」一覧を読む
        ========================================================= */
 
     const pets =
@@ -573,18 +681,37 @@
       );
 
 
-    /* 現在選択中の子 */
+    /* =========================================================
+       現在選択中のうちの子ID
+       ========================================================= */
+
     const currentPetId =
       localStorage.getItem("itsumoneCurrentPet");
 
 
-    /* 表示先 */
+    /* =========================================================
+       memory-add.html で追加された思い出を読む
+       ========================================================= */
+
+    const allMemories =
+      JSON.parse(
+        localStorage.getItem("itsumoneMemories") || "[]"
+      );
+
+
+    /* =========================================================
+       表示先
+       ========================================================= */
+
     const memoriesRoot =
       document.getElementById("memories-root");
 
 
     /* =========================================================
        HTMLエスケープ
+       
+       ユーザー入力をそのままHTMLとして解釈しないための
+       基本的な安全対策です。
        ========================================================= */
 
     function escapeHtml(value) {
@@ -600,15 +727,16 @@
 
 
     /* =========================================================
-       日付表示
+       日付を日本語表示へ変換
        
-       2020-01-05
+       2026-09-18
        ↓
-       2020年1月5日
+       2026年9月18日
        ========================================================= */
 
     function formatDate(dateString) {
 
+      /* 日付が無ければ空文字 */
       if (!dateString) {
         return "";
       }
@@ -620,6 +748,7 @@
         );
 
 
+      /* 不正な日付なら元の値を返す */
       if (
         Number.isNaN(
           date.getTime()
@@ -644,16 +773,18 @@
 
 
     /* =========================================================
-       現在の子を取得
+       現在選択中のうちの子を取得
        ========================================================= */
 
     function getCurrentPet() {
 
+      /* 登録が無い */
       if (pets.length === 0) {
         return null;
       }
 
 
+      /* currentPetId が保存されている場合 */
       if (currentPetId) {
 
         const found =
@@ -664,6 +795,7 @@
           );
 
 
+        /* 見つかればその子 */
         if (found) {
           return found;
         }
@@ -671,14 +803,14 @@
       }
 
 
-      /* IDが無ければ最後に登録した子 */
+      /* 見つからなければ最後に登録した子 */
       return pets[pets.length - 1];
 
     }
 
 
     /* =========================================================
-       タイムライン用データを作る
+       基本プロフィールの「大切な日」を作る
        ========================================================= */
 
     function buildTimeline(pet) {
@@ -686,7 +818,10 @@
       const items = [];
 
 
-      /* 誕生日 */
+      /* ---------------------------------------------------------
+         誕生日
+         --------------------------------------------------------- */
+
       if (pet.birthday) {
 
         items.push({
@@ -705,7 +840,10 @@
       }
 
 
-      /* うちに来た日 */
+      /* ---------------------------------------------------------
+         うちに来た日
+         --------------------------------------------------------- */
+
       if (pet.welcomeDay) {
 
         items.push({
@@ -724,7 +862,10 @@
       }
 
 
-      /* お別れした日 */
+      /* ---------------------------------------------------------
+         お別れした日
+         --------------------------------------------------------- */
+
       if (pet.farewellDay) {
 
         items.push({
@@ -743,7 +884,10 @@
       }
 
 
-      /* 日付順に並べる */
+      /* ---------------------------------------------------------
+         日付の古い順に並べる
+         --------------------------------------------------------- */
+
       items.sort(
         (a, b) =>
           new Date(a.date) -
@@ -752,6 +896,275 @@
 
 
       return items;
+
+    }
+
+
+    /* =========================================================
+       現在の子の「追加された思い出」だけを取得
+       ========================================================= */
+
+    function getPetMemories(pet) {
+
+      return allMemories.filter(
+        memory =>
+          String(memory.petId) ===
+          String(pet.id)
+      );
+
+    }
+
+
+    /* =========================================================
+       追加された思い出を並べ替える
+       
+       日付あり
+       → 新しい順
+
+       日付なし
+       → 登録日時の新しい順
+       ========================================================= */
+
+    function sortMemories(memories) {
+
+      return [...memories].sort(
+        (a, b) => {
+
+          /* 両方に日付がある */
+          if (a.date && b.date) {
+
+            return (
+              new Date(b.date) -
+              new Date(a.date)
+            );
+
+          }
+
+
+          /* aだけ日付あり */
+          if (a.date && !b.date) {
+            return -1;
+          }
+
+
+          /* bだけ日付あり */
+          if (!a.date && b.date) {
+            return 1;
+          }
+
+
+          /* どちらも日付なし */
+          return (
+            new Date(b.createdAt || 0) -
+            new Date(a.createdAt || 0)
+          );
+
+        }
+      );
+
+    }
+
+
+    /* =========================================================
+       追加された思い出のHTMLを作る
+       ========================================================= */
+
+    function buildAddedMemoriesHtml(pet) {
+
+      /* 現在の子の思い出だけ */
+      const petMemories =
+        getPetMemories(pet);
+
+
+      /* 日付順に並び替え */
+      const sortedMemories =
+        sortMemories(petMemories);
+
+
+      /* ---------------------------------------------------------
+         まだ追加された思い出が無い場合
+         --------------------------------------------------------- */
+
+      if (sortedMemories.length === 0) {
+
+        return `
+
+          <div class="memory-section">
+
+            <h2 class="memory-section-title">
+              思い出の記録
+            </h2>
+
+            <div class="no-memories">
+
+              <p>
+                まだ追加された思い出はありません。
+                <br>
+                写真でも、出来事でも、
+                何気ない一日でも残してみましょう。
+              </p>
+
+              <a
+                href="memory-add.html"
+                class="btn btn-primary"
+              >
+                最初の思い出を追加する
+              </a>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+
+
+      /* ---------------------------------------------------------
+         思い出カードを作る
+         --------------------------------------------------------- */
+
+      const cardsHtml =
+        sortedMemories
+          .map(
+            memory => {
+
+              /* ---------------------------------------------
+                 写真
+                 --------------------------------------------- */
+
+              const photoHtml =
+                memory.photo
+                  ? `
+                    <img
+                      src="${memory.photo}"
+                      alt="${escapeHtml(memory.title)}"
+                      class="added-memory-photo"
+                    >
+                  `
+                  : "";
+
+
+              /* ---------------------------------------------
+                 日付
+                 --------------------------------------------- */
+
+              const dateHtml =
+                memory.date
+                  ? `
+                    <span class="memory-date-badge">
+                      ${formatDate(memory.date)}
+                    </span>
+                  `
+                  : `
+                    <span class="memory-date-badge unknown-date">
+                      日付なし
+                    </span>
+                  `;
+
+
+              /* ---------------------------------------------
+                 カテゴリ
+                 --------------------------------------------- */
+
+              const categoryHtml =
+                memory.category
+                  ? `
+                    <span class="memory-category-badge">
+                      ${escapeHtml(memory.category)}
+                    </span>
+                  `
+                  : "";
+
+
+              /* ---------------------------------------------
+                 場所
+                 --------------------------------------------- */
+
+              const placeHtml =
+                memory.place
+                  ? `
+                    <span class="memory-place-badge">
+                      📍 ${escapeHtml(memory.place)}
+                    </span>
+                  `
+                  : "";
+
+
+              /* ---------------------------------------------
+                 本文
+                 --------------------------------------------- */
+
+              const textHtml =
+                memory.text
+                  ? `
+                    <p class="added-memory-text">
+                      ${escapeHtml(memory.text)}
+                    </p>
+                  `
+                  : "";
+
+
+              /* ---------------------------------------------
+                 カード全体
+                 --------------------------------------------- */
+
+              return `
+
+                <article class="added-memory-card">
+
+                  ${photoHtml}
+
+                  <div class="added-memory-body">
+
+                    <div class="added-memory-meta">
+
+                      ${dateHtml}
+
+                      ${categoryHtml}
+
+                      ${placeHtml}
+
+                    </div>
+
+                    <h3 class="added-memory-title">
+                      ${escapeHtml(memory.title)}
+                    </h3>
+
+                    ${textHtml}
+
+                  </div>
+
+                </article>
+
+              `;
+
+            }
+          )
+          .join("");
+
+
+      /* ---------------------------------------------------------
+         セクション全体
+         --------------------------------------------------------- */
+
+      return `
+
+        <div class="memory-section">
+
+          <h2 class="memory-section-title">
+            思い出の記録
+          </h2>
+
+          <div class="added-memory-list">
+
+            ${cardsHtml}
+
+          </div>
+
+        </div>
+
+      `;
 
     }
 
@@ -766,9 +1179,9 @@
         getCurrentPet();
 
 
-      /* ---------------------------------------------------------
-         登録データが無い場合
-         --------------------------------------------------------- */
+      /* =======================================================
+         うちの子がまだ登録されていない場合
+         ======================================================= */
 
       if (!pet) {
 
@@ -802,12 +1215,13 @@
         `;
 
         return;
+
       }
 
 
-      /* ---------------------------------------------------------
-         写真
-         --------------------------------------------------------- */
+      /* =======================================================
+         プロフィール写真
+         ======================================================= */
 
       const photo =
         pet.photo
@@ -815,24 +1229,28 @@
           : "icons/icon-192.png";
 
 
-      /* ---------------------------------------------------------
+      /* =======================================================
          サブ情報
-         --------------------------------------------------------- */
+         ======================================================= */
 
       const subParts = [];
 
 
       if (pet.species) {
+
         subParts.push(
           escapeHtml(pet.species)
         );
+
       }
 
 
       if (pet.nickname) {
+
         subParts.push(
           `呼び名：${escapeHtml(pet.nickname)}`
         );
+
       }
 
 
@@ -840,9 +1258,9 @@
         subParts.join("・");
 
 
-      /* ---------------------------------------------------------
-         タイムライン
-         --------------------------------------------------------- */
+      /* =======================================================
+         基本プロフィール由来のタイムライン
+         ======================================================= */
 
       const timeline =
         buildTimeline(pet);
@@ -903,9 +1321,9 @@
       }
 
 
-      /* ---------------------------------------------------------
-         写真カード
-         --------------------------------------------------------- */
+      /* =======================================================
+         メイン写真
+         ======================================================= */
 
       const photoHtml = `
 
@@ -915,22 +1333,22 @@
             写真
           </h2>
 
-          <div class="photo-memory-card">
+          <div class="main-photo-card">
 
             <img
               src="${photo}"
               alt="${escapeHtml(pet.name)}の写真"
-              class="photo-memory-image"
+              class="main-photo-image"
             >
 
-            <div class="photo-memory-body">
+            <div class="main-photo-body">
 
               <h3>
                 ${escapeHtml(pet.name)}
               </h3>
 
               <p>
-                大切な一枚。
+                いつもね、一緒に。
               </p>
 
             </div>
@@ -942,13 +1360,14 @@
       `;
 
 
-      /* ---------------------------------------------------------
+      /* =======================================================
          その子らしさ
-         --------------------------------------------------------- */
+         ======================================================= */
 
       const cards = [];
 
 
+      /* 好きなもの */
       if (pet.favorites) {
 
         cards.push(`
@@ -974,6 +1393,7 @@
       }
 
 
+      /* 性格・しぐさ */
       if (pet.personality) {
 
         cards.push(`
@@ -999,6 +1419,7 @@
       }
 
 
+      /* 最初に登録した思い出 */
       if (pet.firstMemory) {
 
         cards.push(`
@@ -1010,7 +1431,7 @@
             </div>
 
             <h3>
-              思い出
+              最初に残した思い出
             </h3>
 
             <p>
@@ -1024,12 +1445,12 @@
       }
 
 
-      let memoryCardsHtml = "";
+      let personalityHtml = "";
 
 
       if (cards.length > 0) {
 
-        memoryCardsHtml = `
+        personalityHtml = `
 
           <div class="memory-section">
 
@@ -1050,9 +1471,17 @@
       }
 
 
-      /* ---------------------------------------------------------
-         ページ全体を組み立て
-         --------------------------------------------------------- */
+      /* =======================================================
+         memory-add.html で追加した思い出
+         ======================================================= */
+
+      const addedMemoriesHtml =
+        buildAddedMemoriesHtml(pet);
+
+
+      /* =======================================================
+         ページ全体
+         ======================================================= */
 
       memoriesRoot.innerHTML = `
 
@@ -1089,28 +1518,40 @@
         </div>
 
 
-        <!-- 写真 -->
+        <!-- ================================================
+             基本プロフィール写真
+             ================================================ -->
+
         ${photoHtml}
 
 
-        <!-- 大切な日 -->
+        <!-- ================================================
+             大切な日
+             ================================================ -->
+
         ${timelineHtml}
 
 
-        <!-- 好きなもの・性格・思い出 -->
-        ${memoryCardsHtml}
+        <!-- ================================================
+             その子らしさ
+             ================================================ -->
+
+        ${personalityHtml}
 
 
         <!-- ================================================
-             今後追加していくための導線
+             memory-add.html で追加した思い出
+             ================================================ -->
+
+        ${addedMemoriesHtml}
+
+
+        <!-- ================================================
+             操作ボタン
              ================================================ -->
 
         <div class="memory-actions">
 
-          <!--
-            今後 memory-add.html を作ったら、
-            ここから思い出を追加できるようにします。
-          -->
           <a
             href="memory-add.html"
             class="btn btn-primary"
@@ -1118,7 +1559,6 @@
             思い出を追加する
           </a>
 
-          <!-- プロフィールへ戻る -->
           <a
             href="profile.html"
             class="btn btn-secondary"
@@ -1126,7 +1566,6 @@
             プロフィールを見る
           </a>
 
-          <!-- トップへ戻る -->
           <a
             href="index.html"
             class="btn btn-secondary"
