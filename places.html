@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+  <!-- =========================================================
+       基本設定
+       ========================================================= -->
+
+  <!-- 文字コード -->
+  <meta charset="UTF-8">
+
+  <!-- スマートフォン対応 -->
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <!-- ページタイトル -->
+  <title>思い出の場所｜いつもね™</title>
+
+  <!-- ページ説明 -->
+  <meta
+    name="description"
+    content="いつもね™に、うちの子と一緒に過ごした公園、散歩道、旅行先などの思い出の場所を残します。"
+  >
+
+  <!-- ブラウザUIのテーマカラー -->
+  <meta
+    name="theme-color"
+    content="#ffffff"
+  >
+
+
+  <!-- =========================================================
+       共通CSS
+       ========================================================= -->
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+
+  <!-- =========================================================
+       アイコン
+       ========================================================= -->
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="192x192"
+    href="icons/icon-192.png"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="icons/icon-192.png"
+  >
+
+
+  <!-- =========================================================
+       places.html 専用CSS
+       ========================================================= -->
+
+  <style>
+
+    /* ---------------------------------------------------------
+       ページ全体
+       --------------------------------------------------------- */
+
+    .places-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+
+    /* ---------------------------------------------------------
+       現在選択中のうちの子
+       --------------------------------------------------------- */
+
+    .current-pet {
+      display: flex;
+
+      align-items: center;
+
+      gap: 16px;
+
+      margin-bottom: 30px;
+
+      padding: 18px 20px;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius);
+    }
+
+
+    .current-pet-photo {
+      width: 72px;
+      height: 72px;
+
+      flex-shrink: 0;
+
+      border-radius: 50%;
+
+      object-fit: cover;
+
+      background: #f2efeb;
+
+      border: 1px solid var(--line);
+    }
+
+
+    .current-pet-info {
+      flex: 1;
+    }
+
+
+    .current-pet-name {
+      margin: 0;
+
+      font-size: 22px;
+
+      font-weight: 500;
+    }
+
+
+    .current-pet-sub {
+      margin-top: 4px;
+
+      color: var(--subtext);
+
+      font-size: 13px;
+    }
+
+
+    /* ---------------------------------------------------------
+       ページ内説明ボックス
+       --------------------------------------------------------- */
+
+    .places-message {
+      margin-bottom: 34px;
+
+      padding: 28px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(83, 121, 198, 0.06),
+          rgba(124, 82, 165, 0.06),
+          rgba(217, 87, 121, 0.06)
+        );
+
+      border-radius: var(--radius);
+
+      text-align: center;
+    }
+
+
+    .places-message h2 {
+      margin: 0 0 10px;
+
+      font-size: 22px;
+
+      font-weight: 500;
+    }
+
+
+    .places-message p {
+      margin: 0;
+
+      color: var(--subtext);
+
+      line-height: 1.9;
+    }
+
+
+    /* ---------------------------------------------------------
+       セクション見出し
+       --------------------------------------------------------- */
+
+    .places-section {
+      margin-top: 38px;
+    }
+
+
+    .places-section-title {
+      margin: 0 0 16px;
+
+      font-size: 21px;
+
+      font-weight: 600;
+    }
+
+
+    /* ---------------------------------------------------------
+       場所一覧
+       --------------------------------------------------------- */
+
+    .place-list {
+      display: grid;
+
+      gap: 20px;
+    }
+
+
+    /* ---------------------------------------------------------
+       場所カード
+       --------------------------------------------------------- */
+
+    .place-card {
+      overflow: hidden;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius);
+    }
+
+
+    /* 場所写真 */
+    .place-photo {
+      width: 100%;
+
+      aspect-ratio: 4 / 3;
+
+      object-fit: cover;
+
+      background: #f2efeb;
+    }
+
+
+    /* カード本文 */
+    .place-body {
+      padding: 22px;
+    }
+
+
+    /* 場所タグ */
+    .place-meta {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 8px;
+
+      margin-bottom: 10px;
+    }
+
+
+    .place-type-badge,
+    .place-area-badge {
+      display: inline-block;
+
+      padding: 4px 9px;
+
+      border-radius: 999px;
+
+      background: #f4f1ee;
+
+      color: var(--subtext);
+
+      font-size: 12px;
+    }
+
+
+    /* 場所名 */
+    .place-title {
+      margin: 0 0 8px;
+
+      font-size: 20px;
+
+      font-weight: 600;
+    }
+
+
+    /* 場所の住所・説明 */
+    .place-address {
+      margin: 0 0 12px;
+
+      color: var(--subtext);
+
+      font-size: 14px;
+    }
+
+
+    /* 思い出本文 */
+    .place-memory {
+      margin: 0;
+
+      color: var(--subtext);
+
+      line-height: 1.9;
+
+      white-space: pre-wrap;
+    }
+
+
+    /* ---------------------------------------------------------
+       緯度経度
+       後から地図連携に使います
+       --------------------------------------------------------- */
+
+    .place-coordinates {
+      margin-top: 12px;
+
+      color: #999;
+
+      font-size: 12px;
+    }
+
+
+    /* ---------------------------------------------------------
+       編集・削除用ボタン
+       --------------------------------------------------------- */
+
+    .place-card-actions {
+      display: flex;
+
+      gap: 10px;
+
+      margin-top: 18px;
+    }
+
+
+    .place-action-btn {
+      flex: 1;
+
+      padding: 10px 14px;
+
+      border-radius: 999px;
+
+      text-align: center;
+
+      font-size: 14px;
+
+      cursor: pointer;
+    }
+
+
+    .place-edit-btn {
+      background: white;
+
+      border: 1px solid var(--line);
+    }
+
+
+    .place-delete-btn {
+      background: white;
+
+      color: #a94b4b;
+
+      border: 1px solid #e8caca;
+    }
+
+
+    .place-delete-btn:hover {
+      background: #fff6f6;
+    }
+
+
+    /* ---------------------------------------------------------
+       場所未登録
+       --------------------------------------------------------- */
+
+    .no-places {
+      padding: 38px 24px;
+
+      text-align: center;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius);
+    }
+
+
+    .no-places-icon {
+      font-size: 42px;
+
+      margin-bottom: 12px;
+    }
+
+
+    .no-places h2 {
+      margin: 0 0 10px;
+
+      font-size: 21px;
+
+      font-weight: 500;
+    }
+
+
+    .no-places p {
+      margin: 0 0 24px;
+
+      color: var(--subtext);
+    }
+
+
+    /* ---------------------------------------------------------
+       下部操作
+       --------------------------------------------------------- */
+
+    .places-actions {
+      display: grid;
+
+      gap: 12px;
+
+      margin-top: 36px;
+    }
+
+
+    /* ---------------------------------------------------------
+       うちの子未登録
+       --------------------------------------------------------- */
+
+    .empty-state {
+      padding: 42px 24px;
+
+      text-align: center;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius);
+    }
+
+
+    .empty-state img {
+      width: 100px;
+
+      margin: 0 auto 18px;
+    }
+
+
+    .empty-state h2 {
+      margin: 0 0 10px;
+
+      font-size: 23px;
+
+      font-weight: 500;
+    }
+
+
+    .empty-state p {
+      margin: 0 0 24px;
+
+      color: var(--subtext);
+    }
+
+
+    /* ---------------------------------------------------------
+       PC表示
+       --------------------------------------------------------- */
+
+    @media (min-width: 700px) {
+
+      /*
+        場所カードは写真が大きい方が見やすいので、
+        今の段階では1列表示のままにします。
+
+        将来カード数が増えたら、
+        2列表示に変えてもOKです。
+      */
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================================================
+       ヘッダー
+       ========================================================= -->
+
+  <header>
+
+    <div class="container header-inner">
+
+      <!-- ロゴ＋ブランド名 -->
+      <a
+        href="index.html"
+        class="brand"
+      >
+
+        <img
+          src="icons/icon-192.png"
+          alt="いつもね"
+          class="brand-mark"
+        >
+
+        <div class="brand-name">
+          いつもね<sup>™</sup>
+        </div>
+
+      </a>
+
+
+      <!-- 将来メニュー用 -->
+      <button
+        class="menu-button"
+        aria-label="メニュー"
+        type="button"
+      >
+        ☰
+      </button>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- =========================================================
+       メイン
+       ========================================================= -->
+
+  <main>
+
+
+    <!-- =======================================================
+         ページタイトル
+         ======================================================= -->
+
+    <section class="page-hero">
+
+      <div class="container">
+
+        <img
+          src="icons/icon-192.png"
+          alt=""
+          class="page-logo"
+        >
+
+        <h1 class="page-title">
+          思い出の場所
+        </h1>
+
+        <p class="page-subtitle">
+          一緒に歩いた道も、
+          よく立ち止まった場所も。
+        </p>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =======================================================
+         場所一覧
+         ======================================================= -->
+
+    <section>
+
+      <div class="container">
+
+        <div
+          id="places-root"
+          class="places-wrap"
+        >
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =========================================================
+       フッター
+       ========================================================= -->
+
+  <footer>
+
+    <div class="container">
+
+      <img
+        src="icons/icon-192.png"
+        alt=""
+        class="footer-logo"
+      >
+
+      <div>
+        いつもね™ / Itsumone
+      </div>
+
+      <div>
+        © 2026 03 LLC
+      </div>
+
+    </div>
+
+  </footer>
+
+
+
+  <!-- =========================================================
+       JavaScript
+       ========================================================= -->
+
+  <script>
+
+    /* =========================================================
+       うちの子一覧を読む
+       ========================================================= */
+
+    const pets =
+      JSON.parse(
+        localStorage.getItem("itsumonePets") || "[]"
+      );
+
+
+    /* =========================================================
+       現在選択中のうちの子ID
+       ========================================================= */
+
+    const currentPetId =
+      localStorage.getItem("itsumoneCurrentPet");
+
+
+    /* =========================================================
+       表示先
+       ========================================================= */
+
+    const placesRoot =
+      document.getElementById("places-root");
+
+
+    /* =========================================================
+       HTMLエスケープ
+       ========================================================= */
+
+    function escapeHtml(value) {
+
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+    }
+
+
+    /* =========================================================
+       現在選択中のうちの子を取得
+       ========================================================= */
+
+    function getCurrentPet() {
+
+      /* 登録なし */
+      if (pets.length === 0) {
+        return null;
+      }
+
+
+      /* currentPetId がある場合 */
+      if (currentPetId) {
+
+        const found =
+          pets.find(
+            pet =>
+              String(pet.id) ===
+              String(currentPetId)
+          );
+
+
+        if (found) {
+          return found;
+        }
+
+      }
+
+
+      /* 見つからなければ最後に登録した子 */
+      return pets[pets.length - 1];
+
+    }
+
+
+    /* =========================================================
+       場所データを読む
+       
+       place-add.html で、
+       itsumonePlaces に配列として保存する予定です。
+       ========================================================= */
+
+    function getAllPlaces() {
+
+      return JSON.parse(
+        localStorage.getItem("itsumonePlaces") || "[]"
+      );
+
+    }
+
+
+    /* =========================================================
+       現在の子に紐づく場所だけ取得
+       ========================================================= */
+
+    function getPetPlaces(pet) {
+
+      const places =
+        getAllPlaces();
+
+
+      return places.filter(
+        place =>
+          String(place.petId) ===
+          String(pet.id)
+      );
+
+    }
+
+
+    /* =========================================================
+       場所を並び替える
+       
+       現段階では登録日時の新しい順です。
+       ========================================================= */
+
+    function sortPlaces(places) {
+
+      return [...places].sort(
+        (a, b) =>
+          new Date(b.createdAt || 0) -
+          new Date(a.createdAt || 0)
+      );
+
+    }
+
+
+    /* =========================================================
+       場所削除
+       ========================================================= */
+
+    function deletePlace(placeId) {
+
+      /* ---------------------------------------------------------
+         削除確認
+         --------------------------------------------------------- */
+
+      const ok =
+        confirm(
+          "この場所の記録を削除しますか？\n\n" +
+          "削除した内容は元に戻せません。"
+        );
+
+
+      if (!ok) {
+        return;
+      }
+
+
+      /* ---------------------------------------------------------
+         全場所データ
+         --------------------------------------------------------- */
+
+      const places =
+        getAllPlaces();
+
+
+      /* ---------------------------------------------------------
+         対象以外を残す
+         --------------------------------------------------------- */
+
+      const updatedPlaces =
+        places.filter(
+          place =>
+            String(place.id) !==
+            String(placeId)
+        );
+
+
+      /* ---------------------------------------------------------
+         保存
+         --------------------------------------------------------- */
+
+      localStorage.setItem(
+        "itsumonePlaces",
+        JSON.stringify(updatedPlaces)
+      );
+
+
+      /* ---------------------------------------------------------
+         画面再描画
+         --------------------------------------------------------- */
+
+      renderPlaces();
+
+    }
+
+
+    /* =========================================================
+       場所カードHTML
+       ========================================================= */
+
+    function buildPlacesHtml(pet) {
+
+      /* 現在の子の場所 */
+      const petPlaces =
+        getPetPlaces(pet);
+
+
+      /* 登録日時順 */
+      const sortedPlaces =
+        sortPlaces(petPlaces);
+
+
+      /* ---------------------------------------------------------
+         場所がまだ無い場合
+         --------------------------------------------------------- */
+
+      if (sortedPlaces.length === 0) {
+
+        return `
+
+          <div class="places-section">
+
+            <h2 class="places-section-title">
+              思い出の場所
+            </h2>
+
+            <div class="no-places">
+
+              <div class="no-places-icon">
+                📍
+              </div>
+
+              <h2>
+                まだ場所が登録されていません。
+              </h2>
+
+              <p>
+                いつもの公園。
+                <br>
+                よく歩いた道。
+                <br>
+                旅行で訪れた場所。
+                <br><br>
+                一緒に過ごした場所を、
+                少しずつ残してみましょう。
+              </p>
+
+              <a
+                href="place-add.html"
+                class="btn btn-primary"
+              >
+                最初の場所を登録する
+              </a>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+
+
+      /* ---------------------------------------------------------
+         各カードを作る
+         --------------------------------------------------------- */
+
+      const cardsHtml =
+        sortedPlaces
+          .map(
+            place => {
+
+              /* ---------------------------------------------
+                 写真
+                 --------------------------------------------- */
+
+              const photoHtml =
+                place.photo
+                  ? `
+                    <img
+                      src="${place.photo}"
+                      alt="${escapeHtml(place.name)}"
+                      class="place-photo"
+                    >
+                  `
+                  : "";
+
+
+              /* ---------------------------------------------
+                 種類
+                 --------------------------------------------- */
+
+              const typeHtml =
+                place.type
+                  ? `
+                    <span class="place-type-badge">
+                      ${escapeHtml(place.type)}
+                    </span>
+                  `
+                  : "";
+
+
+              /* ---------------------------------------------
+                 エリア
+                 --------------------------------------------- */
+
+              const areaHtml =
+                place.area
+                  ? `
+                    <span class="place-area-badge">
+                      ${escapeHtml(place.area)}
+                    </span>
+                  `
+                  : "";
+
+
+              /* ---------------------------------------------
+                 住所
+                 --------------------------------------------- */
+
+              const addressHtml =
+                place.address
+                  ? `
+                    <p class="place-address">
+                      📍 ${escapeHtml(place.address)}
+                    </p>
+                  `
+                  : "";
+
+
+              /* ---------------------------------------------
+                 思い出
+                 --------------------------------------------- */
+
+              const memoryHtml =
+                place.memory
+                  ? `
+                    <p class="place-memory">
+                      ${escapeHtml(place.memory)}
+                    </p>
+                  `
+                  : "";
+
+
+              /* ---------------------------------------------
+                 緯度経度
+                 
+                 後で地図表示に使います。
+                 --------------------------------------------- */
+
+              let coordinatesHtml = "";
+
+
+              if (
+                place.latitude &&
+                place.longitude
+              ) {
+
+                coordinatesHtml = `
+
+                  <div class="place-coordinates">
+
+                    緯度：
+                    ${escapeHtml(place.latitude)}
+
+                    ／
+
+                    経度：
+                    ${escapeHtml(place.longitude)}
+
+                  </div>
+
+                `;
+
+              }
+
+
+              /* ---------------------------------------------
+                 編集URL
+                 --------------------------------------------- */
+
+              const editUrl =
+                `place-edit.html?id=${encodeURIComponent(place.id)}`;
+
+
+              /* ---------------------------------------------
+                 カード
+                 --------------------------------------------- */
+
+              return `
+
+                <article class="place-card">
+
+                  ${photoHtml}
+
+                  <div class="place-body">
+
+
+                    <!-- 種類・エリア -->
+                    <div class="place-meta">
+
+                      ${typeHtml}
+
+                      ${areaHtml}
+
+                    </div>
+
+
+                    <!-- 場所名 -->
+                    <h3 class="place-title">
+                      ${escapeHtml(place.name)}
+                    </h3>
+
+
+                    <!-- 住所 -->
+                    ${addressHtml}
+
+
+                    <!-- 思い出 -->
+                    ${memoryHtml}
+
+
+                    <!-- 緯度経度 -->
+                    ${coordinatesHtml}
+
+
+                    <!-- 編集・削除 -->
+                    <div class="place-card-actions">
+
+                      <a
+                        href="${editUrl}"
+                        class="place-action-btn place-edit-btn"
+                      >
+                        編集
+                      </a>
+
+
+                      <button
+                        type="button"
+                        class="place-action-btn place-delete-btn"
+                        data-place-id="${place.id}"
+                      >
+                        削除
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                </article>
+
+              `;
+
+            }
+          )
+          .join("");
+
+
+      /* ---------------------------------------------------------
+         セクション全体
+         --------------------------------------------------------- */
+
+      return `
+
+        <div class="places-section">
+
+          <h2 class="places-section-title">
+            思い出の場所
+          </h2>
+
+          <div class="place-list">
+
+            ${cardsHtml}
+
+          </div>
+
+        </div>
+
+      `;
+
+    }
+
+
+    /* =========================================================
+       メイン表示
+       ========================================================= */
+
+    function renderPlaces() {
+
+      const pet =
+        getCurrentPet();
+
+
+      /* ---------------------------------------------------------
+         うちの子未登録
+         --------------------------------------------------------- */
+
+      if (!pet) {
+
+        placesRoot.innerHTML = `
+
+          <div class="empty-state">
+
+            <img
+              src="icons/icon-192.png"
+              alt=""
+            >
+
+            <h2>
+              まだ、うちの子が登録されていません。
+            </h2>
+
+            <p>
+              思い出の場所を残す前に、
+              まずプロフィールを登録しましょう。
+            </p>
+
+            <a
+              href="register.html"
+              class="btn btn-primary"
+            >
+              うちの子を登録する
+            </a>
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      /* ---------------------------------------------------------
+         プロフィール写真
+         --------------------------------------------------------- */
+
+      const photo =
+        pet.photo
+          ? pet.photo
+          : "icons/icon-192.png";
+
+
+      /* ---------------------------------------------------------
+         サブ情報
+         --------------------------------------------------------- */
+
+      const subParts = [];
+
+
+      if (pet.species) {
+
+        subParts.push(
+          escapeHtml(pet.species)
+        );
+
+      }
+
+
+      if (pet.nickname) {
+
+        subParts.push(
+          `呼び名：${escapeHtml(pet.nickname)}`
+        );
+
+      }
+
+
+      const subText =
+        subParts.join("・");
+
+
+      /* ---------------------------------------------------------
+         場所一覧
+         --------------------------------------------------------- */
+
+      const placesHtml =
+        buildPlacesHtml(pet);
+
+
+      /* ---------------------------------------------------------
+         ページ全体
+         --------------------------------------------------------- */
+
+      placesRoot.innerHTML = `
+
+        <!-- ================================================
+             現在のうちの子
+             ================================================ -->
+
+        <div class="current-pet">
+
+          <img
+            src="${photo}"
+            alt="${escapeHtml(pet.name)}の写真"
+            class="current-pet-photo"
+          >
+
+          <div class="current-pet-info">
+
+            <h2 class="current-pet-name">
+              ${escapeHtml(pet.name)}
+            </h2>
+
+            ${
+              subText
+                ? `
+                  <div class="current-pet-sub">
+                    ${subText}
+                  </div>
+                `
+                : ""
+            }
+
+          </div>
+
+        </div>
+
+
+
+        <!-- ================================================
+             場所アーカイブの説明
+             ================================================ -->
+
+        <div class="places-message">
+
+          <h2>
+            一緒にいた場所を、残しておく。
+          </h2>
+
+          <p>
+            いつもの散歩道も、
+            お気に入りの公園も、
+            旅行で訪れた場所も。
+            <br>
+            その子が生きていた場所も、
+            大切な思い出の一部です。
+          </p>
+
+        </div>
+
+
+
+        <!-- ================================================
+             場所一覧
+             ================================================ -->
+
+        ${placesHtml}
+
+
+
+        <!-- ================================================
+             下部操作
+             ================================================ -->
+
+        <div class="places-actions">
+
+          <a
+            href="place-add.html"
+            class="btn btn-primary"
+          >
+            思い出の場所を追加する
+          </a>
+
+          <!--
+            次の段階で、
+            散歩コースページを作ります。
+          -->
+          <a
+            href="walks.html"
+            class="btn btn-secondary"
+          >
+            散歩コースを見る
+          </a>
+
+          <a
+            href="memories.html"
+            class="btn btn-secondary"
+          >
+            思い出を見る
+          </a>
+
+          <a
+            href="profile.html"
+            class="btn btn-secondary"
+          >
+            プロフィールを見る
+          </a>
+
+        </div>
+
+      `;
+
+
+      /* ---------------------------------------------------------
+         削除ボタンイベント
+         --------------------------------------------------------- */
+
+      const deleteButtons =
+        document.querySelectorAll(
+          ".place-delete-btn"
+        );
+
+
+      deleteButtons.forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            function () {
+
+              const placeId =
+                this.dataset.placeId;
+
+
+              deletePlace(placeId);
+
+            }
+          );
+
+        }
+      );
+
+    }
+
+
+    /* =========================================================
+       初回表示
+       ========================================================= */
+
+    renderPlaces();
+
+  </script>
+
+
+</body>
+
+</html>
