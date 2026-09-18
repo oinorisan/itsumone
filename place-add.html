@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+  <!-- =========================================================
+       基本設定
+       ========================================================= -->
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>思い出の場所を追加する｜いつもね™</title>
+
+  <meta
+    name="description"
+    content="いつもね™に、うちの子と一緒に過ごした公園、散歩道、旅行先などの思い出の場所を登録します。"
+  >
+
+  <meta
+    name="theme-color"
+    content="#ffffff"
+  >
+
+
+  <!-- =========================================================
+       共通CSS
+       ========================================================= -->
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+
+  <!-- =========================================================
+       アイコン
+       ========================================================= -->
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="192x192"
+    href="icons/icon-192.png"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="icons/icon-192.png"
+  >
+
+
+  <!-- =========================================================
+       place-add.html 専用CSS
+       ========================================================= -->
+
+  <style>
+
+    /* ---------------------------------------------------------
+       ページ全体
+       --------------------------------------------------------- */
+
+    .place-add-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+
+    /* ---------------------------------------------------------
+       現在選択中のうちの子
+       --------------------------------------------------------- */
+
+    .current-pet-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      margin-bottom: 28px;
+
+      padding: 16px 18px;
+
+      background: white;
+
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+
+    .current-pet-photo {
+      width: 64px;
+      height: 64px;
+
+      flex-shrink: 0;
+
+      border-radius: 50%;
+
+      object-fit: cover;
+
+      background: #f2efeb;
+
+      border: 1px solid var(--line);
+    }
+
+
+    .current-pet-name {
+      margin: 0;
+
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+
+    .current-pet-sub {
+      margin-top: 3px;
+
+      color: var(--subtext);
+
+      font-size: 13px;
+    }
+
+
+    /* ---------------------------------------------------------
+       写真
+       --------------------------------------------------------- */
+
+    .place-photo-area {
+      text-align: center;
+
+      margin-bottom: 28px;
+    }
+
+
+    .place-photo-preview {
+      width: 100%;
+      max-width: 420px;
+
+      aspect-ratio: 4 / 3;
+
+      margin: 0 auto 14px;
+
+      object-fit: cover;
+
+      background: #f2efeb;
+
+      border: 1px solid var(--line);
+      border-radius: var(--radius-small);
+    }
+
+
+    .place-photo-button {
+      display: inline-block;
+
+      padding: 10px 18px;
+
+      background: white;
+
+      border: 1px solid var(--line);
+      border-radius: 999px;
+
+      cursor: pointer;
+    }
+
+
+    .place-photo-input {
+      display: none;
+    }
+
+
+    /* ---------------------------------------------------------
+       任意表示
+       --------------------------------------------------------- */
+
+    .optional {
+      margin-left: 6px;
+
+      color: var(--subtext);
+
+      font-size: 12px;
+      font-weight: normal;
+    }
+
+
+    /* ---------------------------------------------------------
+       種類ボタン
+       --------------------------------------------------------- */
+
+    .place-type-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, 1fr);
+
+      gap: 10px;
+    }
+
+
+    .place-type-option {
+      position: relative;
+    }
+
+
+    .place-type-option input {
+      position: absolute;
+
+      opacity: 0;
+
+      pointer-events: none;
+    }
+
+
+    .place-type-option label {
+      display: block;
+
+      padding: 12px 14px;
+
+      text-align: center;
+
+      background: white;
+
+      border: 1px solid var(--line);
+      border-radius: 14px;
+
+      cursor: pointer;
+
+      transition: 0.2s;
+    }
+
+
+    .place-type-option input:checked + label {
+      border-color: var(--purple);
+
+      background:
+        rgba(124, 82, 165, 0.08);
+    }
+
+
+    /* ---------------------------------------------------------
+       緯度経度
+       --------------------------------------------------------- */
+
+    .coordinate-grid {
+      display: grid;
+
+      grid-template-columns:
+        1fr;
+
+      gap: 14px;
+    }
+
+
+    /* ---------------------------------------------------------
+       現在地ボタン
+       --------------------------------------------------------- */
+
+    .location-button {
+      width: 100%;
+
+      margin-top: 12px;
+
+      padding: 12px 16px;
+
+      background: white;
+
+      border: 1px solid var(--line);
+      border-radius: 999px;
+
+      cursor: pointer;
+    }
+
+
+    .location-button:hover {
+      background: #faf8f5;
+    }
+
+
+    /* ---------------------------------------------------------
+       位置情報メッセージ
+       --------------------------------------------------------- */
+
+    .location-message {
+      display: none;
+
+      margin-top: 10px;
+
+      color: var(--subtext);
+
+      font-size: 13px;
+    }
+
+
+    /* ---------------------------------------------------------
+       保存ボタン
+       --------------------------------------------------------- */
+
+    .form-actions {
+      margin-top: 34px;
+    }
+
+
+    .form-actions .btn {
+      width: 100%;
+
+      border: none;
+
+      cursor: pointer;
+    }
+
+
+    .back-link {
+      display: block;
+
+      margin-top: 16px;
+
+      text-align: center;
+
+      color: var(--subtext);
+
+      font-size: 14px;
+    }
+
+
+    /* ---------------------------------------------------------
+       保存完了
+       --------------------------------------------------------- */
+
+    .save-message {
+      display: none;
+
+      margin-top: 20px;
+
+      padding: 16px 18px;
+
+      text-align: center;
+
+      background:
+        rgba(124, 82, 165, 0.08);
+
+      border-radius: var(--radius-small);
+    }
+
+
+    /* ---------------------------------------------------------
+       うちの子未登録
+       --------------------------------------------------------- */
+
+    .empty-state {
+      padding: 42px 24px;
+
+      text-align: center;
+
+      background: white;
+
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+
+    .empty-state img {
+      width: 100px;
+
+      margin: 0 auto 18px;
+    }
+
+
+    .empty-state h2 {
+      margin: 0 0 10px;
+
+      font-size: 23px;
+      font-weight: 500;
+    }
+
+
+    .empty-state p {
+      margin: 0 0 24px;
+
+      color: var(--subtext);
+    }
+
+
+    /* ---------------------------------------------------------
+       PC表示
+       --------------------------------------------------------- */
+
+    @media (min-width: 700px) {
+
+      .place-type-grid {
+        grid-template-columns:
+          repeat(3, 1fr);
+      }
+
+
+      .coordinate-grid {
+        grid-template-columns:
+          repeat(2, 1fr);
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================================================
+       ヘッダー
+       ========================================================= -->
+
+  <header>
+
+    <div class="container header-inner">
+
+      <a
+        href="index.html"
+        class="brand"
+      >
+
+        <img
+          src="icons/icon-192.png"
+          alt="いつもね"
+          class="brand-mark"
+        >
+
+        <div class="brand-name">
+          いつもね<sup>™</sup>
+        </div>
+
+      </a>
+
+
+      <button
+        class="menu-button"
+        aria-label="メニュー"
+        type="button"
+      >
+        ☰
+      </button>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- =========================================================
+       メイン
+       ========================================================= -->
+
+  <main>
+
+
+    <!-- =======================================================
+         ページタイトル
+         ======================================================= -->
+
+    <section class="page-hero">
+
+      <div class="container">
+
+        <img
+          src="icons/icon-192.png"
+          alt=""
+          class="page-logo"
+        >
+
+        <h1 class="page-title">
+          思い出の場所を追加する
+        </h1>
+
+        <p class="page-subtitle">
+          一緒にいた場所も、
+          大切な記録です。
+        </p>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =======================================================
+         登録フォーム
+         ======================================================= -->
+
+    <section>
+
+      <div class="container">
+
+        <div
+          id="place-add-root"
+          class="place-add-wrap"
+        >
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =========================================================
+       フッター
+       ========================================================= -->
+
+  <footer>
+
+    <div class="container">
+
+      <img
+        src="icons/icon-192.png"
+        alt=""
+        class="footer-logo"
+      >
+
+      <div>
+        いつもね™ / Itsumone
+      </div>
+
+      <div>
+        © 2026 03 LLC
+      </div>
+
+    </div>
+
+  </footer>
+
+
+
+  <!-- =========================================================
+       JavaScript
+       ========================================================= -->
+
+  <script>
+
+    /* =========================================================
+       うちの子一覧を読む
+       ========================================================= */
+
+    const pets =
+      JSON.parse(
+        localStorage.getItem("itsumonePets") || "[]"
+      );
+
+
+    /* =========================================================
+       現在選択中のうちの子ID
+       ========================================================= */
+
+    const currentPetId =
+      localStorage.getItem("itsumoneCurrentPet");
+
+
+    /* =========================================================
+       表示先
+       ========================================================= */
+
+    const placeAddRoot =
+      document.getElementById("place-add-root");
+
+
+    /* =========================================================
+       HTMLエスケープ
+       ========================================================= */
+
+    function escapeHtml(value) {
+
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+    }
+
+
+    /* =========================================================
+       現在選択中のうちの子を取得
+       ========================================================= */
+
+    function getCurrentPet() {
+
+      if (pets.length === 0) {
+        return null;
+      }
+
+
+      if (currentPetId) {
+
+        const found =
+          pets.find(
+            pet =>
+              String(pet.id) ===
+              String(currentPetId)
+          );
+
+
+        if (found) {
+          return found;
+        }
+
+      }
+
+
+      return pets[pets.length - 1];
+
+    }
+
+
+    /* =========================================================
+       ページ表示
+       ========================================================= */
+
+    function renderPage() {
+
+      const pet =
+        getCurrentPet();
+
+
+      /* ---------------------------------------------------------
+         うちの子が未登録
+         --------------------------------------------------------- */
+
+      if (!pet) {
+
+        placeAddRoot.innerHTML = `
+
+          <div class="empty-state">
+
+            <img
+              src="icons/icon-192.png"
+              alt=""
+            >
+
+            <h2>
+              まだ、うちの子が登録されていません。
+            </h2>
+
+            <p>
+              場所を残す前に、
+              まずプロフィールを登録しましょう。
+            </p>
+
+            <a
+              href="register.html"
+              class="btn btn-primary"
+            >
+              うちの子を登録する
+            </a>
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      /* ---------------------------------------------------------
+         プロフィール写真
+         --------------------------------------------------------- */
+
+      const petPhoto =
+        pet.photo
+          ? pet.photo
+          : "icons/icon-192.png";
+
+
+      /* ---------------------------------------------------------
+         フォーム描画
+         --------------------------------------------------------- */
+
+      placeAddRoot.innerHTML = `
+
+        <!-- ================================================
+             現在のうちの子
+             ================================================ -->
+
+        <div class="current-pet-card">
+
+          <img
+            src="${petPhoto}"
+            alt="${escapeHtml(pet.name)}の写真"
+            class="current-pet-photo"
+          >
+
+          <div>
+
+            <h2 class="current-pet-name">
+              ${escapeHtml(pet.name)}
+            </h2>
+
+            <div class="current-pet-sub">
+              この子との場所を登録します
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- ================================================
+             場所登録フォーム
+             ================================================ -->
+
+        <form
+          id="place-form"
+          class="form-card"
+        >
+
+
+          <!-- ==============================================
+               写真
+               ============================================== -->
+
+          <div class="place-photo-area">
+
+            <img
+              id="place-photo-preview"
+              src="icons/icon-512.png"
+              alt="場所の写真"
+              class="place-photo-preview"
+            >
+
+            <label
+              for="place-photo"
+              class="place-photo-button"
+            >
+              📷 写真を選ぶ
+            </label>
+
+            <input
+              type="file"
+              id="place-photo"
+              class="place-photo-input"
+              accept="image/*"
+            >
+
+            <p class="form-note">
+              写真がなくても登録できます。
+            </p>
+
+          </div>
+
+
+
+          <!-- ==============================================
+               場所名
+               ============================================== -->
+
+          <div class="form-group">
+
+            <label
+              for="place-name"
+              class="form-label"
+            >
+              場所の名前
+            </label>
+
+            <input
+              type="text"
+              id="place-name"
+              class="form-input"
+              placeholder="例：いつもの公園"
+              required
+            >
+
+          </div>
+
+
+
+          <!-- ==============================================
+               場所の種類
+               ============================================== -->
+
+          <div class="form-group">
+
+            <div class="form-label">
+
+              どんな場所？
+
+              <span class="optional">
+                任意
+              </span>
+
+            </div>
+
+
+            <div class="place-type-grid">
+
+
+              <div class="place-type-option">
+
+                <input
+                  type="radio"
+                  name="place-type"
+                  id="type-park"
+                  value="公園"
+                >
+
+                <label for="type-park">
+                  🌳 公園
+                </label>
+
+              </div>
+
+
+              <div class="place-type-option">
+
+                <input
+                  type="radio"
+                  name="place-type"
+                  id="type-walk"
+                  value="散歩道"
+                >
+
+                <label for="type-walk">
+                  🚶 散歩道
+                </label>
+
+              </div>
+
+
+              <div class="place-type-option">
+
+                <input
+                  type="radio"
+                  name="place-type"
+                  id="type-home"
+                  value="家・庭"
+                >
+
+                <label for="type-home">
+                  🏠 家・庭
+                </label>
+
+              </div>
+
+
+              <div class="place-type-option">
+
+                <input
+                  type="radio"
+                  name="place-type"
+                  id="type-hospital"
+                  value="病院"
+                >
+
+                <label for="type-hospital">
+                  🏥 病院
+                </label>
+
+              </div>
+
+
+              <div class="place-type-option">
+
+                <input
+                  type="radio"
+                  name="place-type"
+                  id="type-trip"
+                  value="旅行先"
+                >
+
+                <label for="type-trip">
+                  🧳 旅行先
+                </label>
+
+              </div>
+
+
+              <div class="place-type-option">
+
+                <input
+                  type="radio"
+                  name="place-type"
+                  id="type-other"
+                  value="その他"
+                >
+
+                <label for="type-other">
+                  📍 その他
+                </label>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- ==============================================
+               エリア
+               ============================================== -->
+
+          <div class="form-group">
+
+            <label
+              for="place-area"
+              class="form-label"
+            >
+              エリア
+              <span class="optional">
+                任意
+              </span>
+            </label>
+
+            <input
+              type="text"
+              id="place-area"
+              class="form-input"
+              placeholder="例：山中湖、清里、近所など"
+            >
+
+          </div>
+
+
+
+          <!-- ==============================================
+               住所
+               ============================================== -->
+
+          <div class="form-group">
+
+            <label
+              for="place-address"
+              class="form-label"
+            >
+              住所
+              <span class="optional">
+                任意
+              </span>
+            </label>
+
+            <input
+              type="text"
+              id="place-address"
+              class="form-input"
+              placeholder="わかる範囲で入力してください"
+            >
+
+          </div>
+
+
+
+          <!-- ==============================================
+               緯度・経度
+               
+               将来、地図表示や散歩コースに利用します。
+               ============================================== -->
+
+          <div class="form-group">
+
+            <div class="form-label">
+              地図の位置
+              <span class="optional">
+                任意
+              </span>
+            </div>
+
+
+            <div class="coordinate-grid">
+
+
+              <!-- 緯度 -->
+              <div>
+
+                <label
+                  for="place-latitude"
+                  class="form-note"
+                >
+                  緯度
+                </label>
+
+                <input
+                  type="number"
+                  id="place-latitude"
+                  class="form-input"
+                  step="any"
+                  placeholder="35.123456"
+                >
+
+              </div>
+
+
+              <!-- 経度 -->
+              <div>
+
+                <label
+                  for="place-longitude"
+                  class="form-note"
+                >
+                  経度
+                </label>
+
+                <input
+                  type="number"
+                  id="place-longitude"
+                  class="form-input"
+                  step="any"
+                  placeholder="138.123456"
+                >
+
+              </div>
+
+            </div>
+
+
+            <!--
+              ブラウザの位置情報機能を使って
+              現在地を取得します。
+
+              ※ HTTPS環境が必要です。
+              GitHub PagesならHTTPSなので利用できます。
+            -->
+            <button
+              type="button"
+              id="get-location-button"
+              class="location-button"
+            >
+              📍 現在地を入れる
+            </button>
+
+
+            <div
+              id="location-message"
+              class="location-message"
+            >
+            </div>
+
+
+            <p class="form-note">
+              あとから地図上で選べるようにしていく予定です。
+            </p>
+
+          </div>
+
+
+
+          <!-- ==============================================
+               思い出
+               ============================================== -->
+
+          <div class="form-group">
+
+            <label
+              for="place-memory"
+              class="form-label"
+            >
+              この場所の思い出
+              <span class="optional">
+                任意
+              </span>
+            </label>
+
+            <textarea
+              id="place-memory"
+              class="form-textarea"
+              placeholder="ここでよく立ち止まった、毎朝ここまで歩いた、初めて旅行した場所…など"
+            ></textarea>
+
+          </div>
+
+
+
+          <!-- ==============================================
+               保存
+               ============================================== -->
+
+          <div class="form-actions">
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+            >
+              この場所を残す
+            </button>
+
+
+            <a
+              href="places.html"
+              class="back-link"
+            >
+              場所一覧へ戻る
+            </a>
+
+          </div>
+
+
+
+          <!-- 保存完了 -->
+          <div
+            id="save-message"
+            class="save-message"
+          >
+            場所を保存しました。
+            <br>
+            一緒にいた場所も、大切な思い出です。
+          </div>
+
+
+        </form>
+
+      `;
+
+
+      /* フォーム機能を設定 */
+      setupPlaceForm(pet);
+
+    }
+
+
+    /* =========================================================
+       フォーム機能
+       ========================================================= */
+
+    function setupPlaceForm(pet) {
+
+      /* ---------------------------------------------------------
+         各要素
+         --------------------------------------------------------- */
+
+      const form =
+        document.getElementById("place-form");
+
+
+      const photoInput =
+        document.getElementById("place-photo");
+
+
+      const photoPreview =
+        document.getElementById("place-photo-preview");
+
+
+      const latitudeInput =
+        document.getElementById("place-latitude");
+
+
+      const longitudeInput =
+        document.getElementById("place-longitude");
+
+
+      const getLocationButton =
+        document.getElementById("get-location-button");
+
+
+      const locationMessage =
+        document.getElementById("location-message");
+
+
+      const saveMessage =
+        document.getElementById("save-message");
+
+
+      /* ---------------------------------------------------------
+         写真データ
+         --------------------------------------------------------- */
+
+      let photoData = "";
+
+
+      /* =========================================================
+         写真を選んだとき
+         ========================================================= */
+
+      photoInput.addEventListener(
+        "change",
+        function () {
+
+          const file =
+            this.files[0];
+
+
+          if (!file) {
+            return;
+          }
+
+
+          if (!file.type.startsWith("image/")) {
+
+            alert(
+              "画像ファイルを選んでください。"
+            );
+
+            return;
+
+          }
+
+
+          const reader =
+            new FileReader();
+
+
+          reader.onload =
+            function (event) {
+
+              const image =
+                new Image();
+
+
+              image.onload =
+                function () {
+
+                  /* -------------------------------------------
+                     localStorage容量節約のため画像縮小
+                     ------------------------------------------- */
+
+                  const canvas =
+                    document.createElement("canvas");
+
+
+                  const ctx =
+                    canvas.getContext("2d");
+
+
+                  const maxSize = 1200;
+
+
+                  let width =
+                    image.width;
+
+
+                  let height =
+                    image.height;
+
+
+                  /* 横長 */
+                  if (
+                    width > height &&
+                    width > maxSize
+                  ) {
+
+                    height =
+                      Math.round(
+                        height * maxSize / width
+                      );
+
+                    width =
+                      maxSize;
+
+                  }
+
+
+                  /* 縦長 */
+                  if (
+                    height >= width &&
+                    height > maxSize
+                  ) {
+
+                    width =
+                      Math.round(
+                        width * maxSize / height
+                      );
+
+                    height =
+                      maxSize;
+
+                  }
+
+
+                  canvas.width =
+                    width;
+
+
+                  canvas.height =
+                    height;
+
+
+                  ctx.drawImage(
+                    image,
+                    0,
+                    0,
+                    width,
+                    height
+                  );
+
+
+                  photoData =
+                    canvas.toDataURL(
+                      "image/jpeg",
+                      0.82
+                    );
+
+
+                  photoPreview.src =
+                    photoData;
+
+                };
+
+
+              image.src =
+                event.target.result;
+
+            };
+
+
+          reader.readAsDataURL(file);
+
+        }
+      );
+
+
+      /* =========================================================
+         現在地取得
+         ========================================================= */
+
+      getLocationButton.addEventListener(
+        "click",
+        function () {
+
+          /* -------------------------------------------------------
+             geolocation対応確認
+             ------------------------------------------------------- */
+
+          if (!navigator.geolocation) {
+
+            locationMessage.style.display =
+              "block";
+
+
+            locationMessage.textContent =
+              "このブラウザでは位置情報を利用できません。";
+
+
+            return;
+
+          }
+
+
+          /* -------------------------------------------------------
+             取得中表示
+             ------------------------------------------------------- */
+
+          locationMessage.style.display =
+            "block";
+
+
+          locationMessage.textContent =
+            "現在地を確認しています…";
+
+
+          /* -------------------------------------------------------
+             現在地取得
+             ------------------------------------------------------- */
+
+          navigator.geolocation.getCurrentPosition(
+
+            /* 成功 */
+            function (position) {
+
+              const latitude =
+                position.coords.latitude;
+
+
+              const longitude =
+                position.coords.longitude;
+
+
+              /* 入力欄へ反映 */
+              latitudeInput.value =
+                latitude.toFixed(6);
+
+
+              longitudeInput.value =
+                longitude.toFixed(6);
+
+
+              locationMessage.textContent =
+                "現在地を入力しました。";
+
+            },
+
+
+            /* 失敗 */
+            function (error) {
+
+              console.error(error);
+
+
+              locationMessage.textContent =
+                "位置情報を取得できませんでした。";
+
+            },
+
+
+            /* オプション */
+            {
+
+              enableHighAccuracy: true,
+
+              timeout: 10000,
+
+              maximumAge: 60000
+
+            }
+
+          );
+
+        }
+      );
+
+
+      /* =========================================================
+         保存処理
+         ========================================================= */
+
+      form.addEventListener(
+        "submit",
+        function (event) {
+
+          /* 通常のフォーム送信を止める */
+          event.preventDefault();
+
+
+          /* -------------------------------------------------------
+             場所種類
+             ------------------------------------------------------- */
+
+          const selectedType =
+            document.querySelector(
+              'input[name="place-type"]:checked'
+            );
+
+
+          const type =
+            selectedType
+              ? selectedType.value
+              : "";
+
+
+          /* -------------------------------------------------------
+             場所オブジェクト
+             ------------------------------------------------------- */
+
+          const place = {
+
+            /* 一意ID */
+            id:
+              Date.now(),
+
+            /* どの子の場所か */
+            petId:
+              pet.id,
+
+            /* 場所名 */
+            name:
+              document
+                .getElementById("place-name")
+                .value
+                .trim(),
+
+            /* 場所種類 */
+            type:
+              type,
+
+            /* エリア */
+            area:
+              document
+                .getElementById("place-area")
+                .value
+                .trim(),
+
+            /* 住所 */
+            address:
+              document
+                .getElementById("place-address")
+                .value
+                .trim(),
+
+            /* 緯度 */
+            latitude:
+              document
+                .getElementById("place-latitude")
+                .value
+                .trim(),
+
+            /* 経度 */
+            longitude:
+              document
+                .getElementById("place-longitude")
+                .value
+                .trim(),
+
+            /* 思い出 */
+            memory:
+              document
+                .getElementById("place-memory")
+                .value
+                .trim(),
+
+            /* 写真 */
+            photo:
+              photoData,
+
+            /* 登録日時 */
+            createdAt:
+              new Date().toISOString()
+
+          };
+
+
+          /* -------------------------------------------------------
+             既存場所データ
+             ------------------------------------------------------- */
+
+          const places =
+            JSON.parse(
+              localStorage.getItem(
+                "itsumonePlaces"
+              ) || "[]"
+            );
+
+
+          /* 追加 */
+          places.push(place);
+
+
+          /* -------------------------------------------------------
+             保存
+             ------------------------------------------------------- */
+
+          try {
+
+            localStorage.setItem(
+              "itsumonePlaces",
+              JSON.stringify(places)
+            );
+
+
+            /* 完了表示 */
+            saveMessage.style.display =
+              "block";
+
+
+            /* -----------------------------------------------------
+               場所一覧へ戻る
+               ----------------------------------------------------- */
+
+            setTimeout(
+              function () {
+
+                window.location.href =
+                  "places.html";
+
+              },
+              900
+            );
+
+
+          } catch (error) {
+
+            console.error(error);
+
+
+            alert(
+              "保存できませんでした。\n" +
+              "写真の容量が大きい可能性があります。"
+            );
+
+          }
+
+        }
+      );
+
+    }
+
+
+    /* =========================================================
+       初回表示
+       ========================================================= */
+
+    renderPage();
+
+  </script>
+
+
+</body>
+
+</html>
