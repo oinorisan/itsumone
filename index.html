@@ -2,42 +2,122 @@
 <html lang="ja">
 
 <head>
+
+  <!-- =========================================================
+       基本設定
+       ========================================================= -->
+
+  <!-- 文字コード -->
   <meta charset="UTF-8">
 
+  <!-- スマートフォン表示用 -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- ページタイトル -->
   <title>いつもね™｜ずーっとうちの子。</title>
 
-  <meta name="description"
-    content="いつもね™は、うちの子との毎日、写真、記念日、好きだったもの、思い出を残していくライフアーカイブです。">
+  <!-- 検索エンジンやSNS向けの説明 -->
+  <meta
+    name="description"
+    content="いつもね™は、うちの子との毎日、写真、記念日、好きだったもの、思い出を残していくライフアーカイブです。"
+  >
 
+  <!-- ブラウザUIのテーマカラー -->
   <meta name="theme-color" content="#ffffff">
 
+
+  <!-- =========================================================
+       favicon / PWA用アイコン
+       ========================================================= -->
+
+  <!--
+    今回は icons フォルダ内の画像を使用します。
+
+    フォルダ構成の想定：
+
+    itsumone/
+    ├─ index.html
+    └─ icons/
+       ├─ icon-192.png
+       └─ icon-512.png
+  -->
+
+  <!-- 一般的なブラウザ用アイコン -->
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="192x192"
+    href="icons/icon-192.png"
+  >
+
+  <!-- Apple端末でホーム画面に追加したときのアイコン -->
+  <link
+    rel="apple-touch-icon"
+    href="icons/icon-192.png"
+  >
+
+
+  <!-- =========================================================
+       CSS
+       今は index.html 内に直接書いています。
+       将来的には style.css に分けてもOKです。
+       ========================================================= -->
+
   <style>
+
+    /* =========================================================
+       カラーパレット
+       ========================================================= */
+
     :root {
+
+      /* ページ背景 */
       --bg: #fbfaf8;
+
+      /* カード背景 */
       --card: #ffffff;
+
+      /* メイン文字色 */
       --text: #4a4a4a;
+
+      /* 補助文字色 */
       --subtext: #777777;
+
+      /* 枠線 */
       --line: #e8e4df;
 
+      /* ロゴに合わせたカラー */
       --pink: #d95779;
       --purple: #7c52a5;
       --blue: #5379c6;
 
+      /* 共通角丸 */
       --radius: 24px;
     }
+
+
+    /* =========================================================
+       全体リセット
+       ========================================================= */
 
     * {
       box-sizing: border-box;
     }
 
+
     html {
+
+      /* ページ内リンクを滑らかにスクロール */
       scroll-behavior: smooth;
     }
 
+
     body {
+
+      /* ブラウザ標準余白を削除 */
       margin: 0;
+
+      /* 日本語中心の読みやすいフォント */
       font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -47,146 +127,243 @@
         Arial,
         sans-serif;
 
+      /* ページ背景色 */
       background: var(--bg);
+
+      /* 文字色 */
       color: var(--text);
+
+      /* 行間 */
       line-height: 1.8;
     }
 
+
+    /* 画像のはみ出し防止 */
     img {
       max-width: 100%;
       display: block;
     }
 
+
+    /* リンクの基本装飾 */
     a {
       color: inherit;
       text-decoration: none;
     }
 
+
+    /* =========================================================
+       共通コンテナ
+       ========================================================= */
+
     .container {
+
+      /* スマホでは92%、PCでは最大920px */
       width: min(92%, 920px);
+
+      /* 中央寄せ */
       margin: 0 auto;
     }
 
 
-    /* =========================
-       Header
-    ========================= */
+    /* =========================================================
+       ヘッダー
+       ========================================================= */
 
     header {
+
+      /* スクロールしても上部に残す */
       position: sticky;
       top: 0;
+
+      /* 他要素より前面 */
       z-index: 10;
 
+      /* 少し透ける背景 */
       background: rgba(251, 250, 248, 0.92);
+
+      /* 背景ぼかし */
       backdrop-filter: blur(10px);
+
+      /* 下線 */
       border-bottom: 1px solid rgba(0, 0, 0, 0.04);
     }
 
+
     .header-inner {
+
+      /* ヘッダー高さ */
       height: 68px;
 
+      /* 横並び */
       display: flex;
+
+      /* 縦中央 */
       align-items: center;
+
+      /* 左右に分ける */
       justify-content: space-between;
     }
 
+
+    /* ロゴと名称 */
     .brand {
+
       display: flex;
+
       align-items: center;
+
       gap: 10px;
     }
 
+
+    /* ヘッダー内のロゴマーク */
     .brand-mark {
-      width: 42px;
-      height: 42px;
+
+      width: 40px;
+
+      height: 40px;
 
       object-fit: contain;
     }
 
+
+    /* 「いつもね™」 */
     .brand-name {
+
       font-size: 20px;
+
       font-weight: 500;
+
       letter-spacing: 0.04em;
     }
 
+
+    /* ™を少し小さく */
     .brand-name sup {
+
       font-size: 10px;
     }
 
+
+    /* ハンバーガーメニュー */
     .menu-button {
+
       border: none;
+
       background: transparent;
 
       font-size: 26px;
+
       cursor: pointer;
     }
 
 
-    /* =========================
-       Hero
-    ========================= */
+    /* =========================================================
+       ヒーロー
+       ========================================================= */
 
     .hero {
+
+      /* ファーストビューに余裕を持たせる */
       min-height: 78vh;
 
       display: flex;
+
       align-items: center;
 
       text-align: center;
+
       padding: 64px 0 72px;
     }
 
+
+    /* 大きなロゴマーク */
     .hero-logo {
-      width: 170px;
-      margin: 0 auto 28px;
+
+      width: 150px;
+
+      margin: 0 auto 24px;
     }
 
+
+    /* メインタイトル */
     .hero h1 {
+
       margin: 0 0 10px;
 
       font-size: clamp(38px, 9vw, 64px);
+
       font-weight: 400;
+
       letter-spacing: 0.04em;
     }
 
+
+    /* タイトルの™ */
     .hero h1 sup {
+
       font-size: 14px;
+
       vertical-align: super;
     }
 
+
+    /* 英字表記 */
     .hero-sub {
+
       margin: 0 0 28px;
 
       font-size: 16px;
+
       color: var(--subtext);
+
       letter-spacing: 0.08em;
     }
 
+
+    /* メインキャッチコピー */
     .catch {
+
       margin: 0 0 18px;
 
       font-size: clamp(24px, 6vw, 38px);
+
       font-weight: 500;
+
       letter-spacing: 0.04em;
     }
 
+
+    /* 説明文 */
     .lead {
+
       max-width: 580px;
+
       margin: 0 auto 36px;
 
       color: var(--subtext);
+
       font-size: 16px;
     }
 
+
+    /* ボタン群 */
     .hero-buttons {
+
       display: grid;
+
       gap: 12px;
 
       max-width: 360px;
+
       margin: 0 auto;
     }
 
+
+    /* 共通ボタン */
     .btn {
+
       display: block;
 
       padding: 16px 22px;
@@ -194,10 +371,14 @@
       border-radius: 999px;
 
       font-weight: 600;
+
       transition: 0.2s;
     }
 
+
+    /* メインボタン */
     .btn-primary {
+
       color: white;
 
       background:
@@ -209,124 +390,175 @@
         );
     }
 
+
+    /* サブボタン */
     .btn-secondary {
+
       background: white;
+
       border: 1px solid var(--line);
     }
 
+
+    /* マウスを乗せた時 */
     .btn:hover {
+
       opacity: 0.85;
+
       transform: translateY(-1px);
     }
 
 
-    /* =========================
-       Intro
-    ========================= */
+    /* =========================================================
+       各セクション共通
+       ========================================================= */
 
     section {
+
       padding: 80px 0;
     }
 
+
+    /* セクション見出し */
     .section-title {
+
       margin: 0 0 16px;
 
       text-align: center;
 
       font-size: 28px;
+
       font-weight: 500;
     }
 
+
+    /* セクション説明 */
     .section-lead {
+
       max-width: 620px;
+
       margin: 0 auto 42px;
 
       text-align: center;
+
       color: var(--subtext);
     }
 
+
+    /* =========================================================
+       いつもね™について
+       ========================================================= */
+
     .message-box {
+
       background: white;
 
       padding: 38px 28px;
 
       border-radius: var(--radius);
+
       border: 1px solid var(--line);
 
       text-align: center;
     }
 
+
     .message-box p {
+
       margin: 0;
+
       font-size: 18px;
+
       line-height: 2;
     }
 
 
-    /* =========================
-       Features
-    ========================= */
+    /* =========================================================
+       機能カード
+       ========================================================= */
 
     .features {
+
       display: grid;
+
       gap: 18px;
     }
 
+
     .feature-card {
+
       padding: 26px;
 
       background: var(--card);
 
       border-radius: var(--radius);
+
       border: 1px solid var(--line);
     }
 
+
     .feature-icon {
+
       font-size: 30px;
+
       margin-bottom: 10px;
     }
 
+
     .feature-card h3 {
+
       margin: 0 0 8px;
 
       font-size: 19px;
+
       font-weight: 600;
     }
 
+
     .feature-card p {
+
       margin: 0;
+
       color: var(--subtext);
     }
 
 
-    /* =========================
-       Story
-    ========================= */
+    /* =========================================================
+       ストーリー部分
+       ========================================================= */
 
     .story {
+
       text-align: center;
     }
 
+
     .story-lines {
+
       margin: 0 auto;
 
       max-width: 580px;
 
       font-size: 18px;
+
       line-height: 2.2;
     }
 
+
     .story-lines strong {
+
       font-size: 24px;
+
       font-weight: 500;
     }
 
 
-    /* =========================
-       CTA
-    ========================= */
+    /* =========================================================
+       最後のCTA
+       ========================================================= */
 
     .cta-box {
+
       padding: 46px 26px;
 
       border-radius: 28px;
@@ -342,52 +574,69 @@
         );
     }
 
+
     .cta-box h2 {
+
       margin: 0 0 14px;
 
       font-size: 28px;
+
       font-weight: 500;
     }
 
+
     .cta-box p {
+
       margin: 0 0 26px;
 
       color: var(--subtext);
     }
 
+
     .cta-box .btn {
+
       max-width: 340px;
+
       margin: 0 auto;
     }
 
 
-    /* =========================
-       Footer
-    ========================= */
+    /* =========================================================
+       フッター
+       ========================================================= */
 
     footer {
+
       padding: 44px 0;
 
       text-align: center;
+
       color: #999;
 
       font-size: 13px;
     }
 
+
+    /* フッター用ロゴ */
     .footer-logo {
-      width: 70px;
+
+      width: 64px;
+
       margin: 0 auto 12px;
+
       opacity: 0.9;
     }
 
 
-    /* =========================
-       Desktop
-    ========================= */
+    /* =========================================================
+       PC表示
+       ========================================================= */
 
     @media (min-width: 700px) {
 
+      /* 機能カードを2列に */
       .features {
+
         grid-template-columns:
           repeat(2, 1fr);
       }
@@ -402,30 +651,47 @@
 <body>
 
 
-  <!-- =========================
-       Header
-  ========================== -->
+  <!-- =========================================================
+       ヘッダー
+       ========================================================= -->
 
   <header>
 
     <div class="container header-inner">
 
+      <!--
+        左側ロゴ
+        クリックするとトップページへ戻ります
+      -->
       <a href="index.html" class="brand">
 
+        <!--
+          文字なしの192pxロゴマーク
+        -->
         <img
-          src="images/itsumone-mark.png"
+          src="icons/icon-192.png"
           alt="いつもね"
           class="brand-mark"
         >
 
+        <!-- 日本語ブランド名 -->
         <div class="brand-name">
+
           いつもね<sup>™</sup>
+
         </div>
 
       </a>
 
-      <button class="menu-button"
-        aria-label="メニュー">
+
+      <!--
+        将来、メニューを開くためのボタン
+        今はまだクリック動作は入れていません
+      -->
+      <button
+        class="menu-button"
+        aria-label="メニュー"
+      >
         ☰
       </button>
 
@@ -435,35 +701,59 @@
 
 
 
+  <!-- =========================================================
+       メインコンテンツ
+       ========================================================= -->
+
   <main>
 
 
-    <!-- =========================
-         Hero
-    ========================== -->
+    <!-- =======================================================
+         ヒーロー
+         最初に表示される一番重要なエリア
+         ======================================================= -->
 
     <section class="hero">
 
       <div class="container">
 
+
+        <!--
+          大きな文字なしロゴ
+          512px画像を使用
+        -->
         <img
-          src="images/itsumone-logo.png"
+          src="icons/icon-512.png"
           alt="いつもね"
           class="hero-logo"
         >
 
+
+        <!-- 日本語ブランド名 -->
         <h1>
+
           いつもね<sup>™</sup>
+
         </h1>
 
+
+        <!-- 英字ブランド名 -->
         <p class="hero-sub">
+
           Itsumone
+
         </p>
 
+
+        <!-- メインキャッチ -->
         <p class="catch">
+
           ずーっとうちの子。
+
         </p>
 
+
+        <!-- サービス説明 -->
         <p class="lead">
 
           写真も、思い出も、
@@ -478,19 +768,31 @@
         </p>
 
 
+        <!-- ボタン -->
         <div class="hero-buttons">
 
+
+          <!--
+            将来 register.html を作ったら
+            登録画面へ移動します
+          -->
           <a
             href="register.html"
-            class="btn btn-primary">
+            class="btn btn-primary"
+          >
 
             うちの子を登録する
 
           </a>
 
+
+          <!--
+            ページ内の説明部分へ移動
+          -->
           <a
             href="#about"
-            class="btn btn-secondary">
+            class="btn btn-secondary"
+          >
 
             いつもね™について
 
@@ -504,17 +806,21 @@
 
 
 
-    <!-- =========================
-         About
-    ========================== -->
+    <!-- =======================================================
+         サービス思想
+         ======================================================= -->
 
     <section id="about">
 
       <div class="container">
 
+
         <h2 class="section-title">
+
           いつも、そばにいた。
+
         </h2>
+
 
         <p class="section-lead">
 
@@ -539,7 +845,9 @@
             <br>
 
             <strong>
+
               一緒に暮らした時間の記録
+
             </strong>
 
             を残す場所です。
@@ -554,17 +862,21 @@
 
 
 
-    <!-- =========================
-         Archive Features
-    ========================== -->
+    <!-- =======================================================
+         うちの子アーカイブ
+         ======================================================= -->
 
     <section>
 
       <div class="container">
 
+
         <h2 class="section-title">
+
           うちの子のアーカイブ
+
         </h2>
+
 
         <p class="section-lead">
 
@@ -577,6 +889,7 @@
         <div class="features">
 
 
+          <!-- 写真 -->
           <div class="feature-card">
 
             <div class="feature-icon">
@@ -588,14 +901,17 @@
             </h3>
 
             <p>
+
               日々の写真や、
               大切な一枚を残します。
+
             </p>
 
           </div>
 
 
 
+          <!-- 記念日 -->
           <div class="feature-card">
 
             <div class="feature-icon">
@@ -607,15 +923,18 @@
             </h3>
 
             <p>
+
               誕生日、
               お迎えした日、
               大切な記念日を記録します。
+
             </p>
 
           </div>
 
 
 
+          <!-- 好きだったもの -->
           <div class="feature-card">
 
             <div class="feature-icon">
@@ -627,16 +946,19 @@
             </h3>
 
             <p>
+
               食べ物、
               おもちゃ、
               場所など、
               その子らしさを残します。
+
             </p>
 
           </div>
 
 
 
+          <!-- 思い出の場所 -->
           <div class="feature-card">
 
             <div class="feature-icon">
@@ -648,16 +970,19 @@
             </h3>
 
             <p>
+
               散歩道、
               公園、
               旅行先など、
               一緒に過ごした場所を残します。
+
             </p>
 
           </div>
 
 
 
+          <!-- 思い出 -->
           <div class="feature-card">
 
             <div class="feature-icon">
@@ -669,16 +994,19 @@
             </h3>
 
             <p>
+
               しぐさ、
               性格、
               あの日の出来事などを
               自由に書き残せます。
+
             </p>
 
           </div>
 
 
 
+          <!-- メモリアル -->
           <div class="feature-card">
 
             <div class="feature-icon">
@@ -690,9 +1018,11 @@
             </h3>
 
             <p>
+
               お別れしたあとも、
               その子との記録は
               そのまま残ります。
+
             </p>
 
           </div>
@@ -706,13 +1036,14 @@
 
 
 
-    <!-- =========================
-         Story
-    ========================== -->
+    <!-- =======================================================
+         ストーリー
+         ======================================================= -->
 
     <section class="story">
 
       <div class="container">
+
 
         <div class="story-lines">
 
@@ -733,7 +1064,9 @@
           <br><br>
 
           <strong>
+
             ずーっとうちの子。
+
           </strong>
 
         </div>
@@ -744,20 +1077,25 @@
 
 
 
-    <!-- =========================
-         CTA
-    ========================== -->
+    <!-- =======================================================
+         最後の登録導線
+         ======================================================= -->
 
     <section>
 
       <div class="container">
 
+
         <div class="cta-box">
 
+
           <h2>
+
             うちの子の記録を、
             はじめよう。
+
           </h2>
+
 
           <p>
 
@@ -771,13 +1109,17 @@
 
           </p>
 
+
+          <!-- 登録ページ -->
           <a
             href="register.html"
-            class="btn btn-primary">
+            class="btn btn-primary"
+          >
 
             うちの子を登録する
 
           </a>
+
 
         </div>
 
@@ -790,27 +1132,38 @@
 
 
 
-  <!-- =========================
-       Footer
-  ========================== -->
+  <!-- =========================================================
+       フッター
+       ========================================================= -->
 
   <footer>
 
     <div class="container">
 
+
+      <!-- 小さなロゴ -->
       <img
-        src="images/itsumone-mark.png"
+        src="icons/icon-192.png"
         alt=""
         class="footer-logo"
       >
 
+
+      <!-- ブランド名 -->
       <div>
+
         いつもね™ / Itsumone
+
       </div>
 
+
+      <!-- コピーライト -->
       <div>
+
         © 2026 03 LLC
+
       </div>
+
 
     </div>
 
@@ -818,4 +1171,5 @@
 
 
 </body>
+
 </html>
