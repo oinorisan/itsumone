@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+  <!-- =========================================================
+       基本設定
+       ========================================================= -->
+
+  <!-- 文字コード -->
+  <meta charset="UTF-8">
+
+  <!-- スマートフォン対応 -->
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <!-- ページタイトル -->
+  <title>思い出｜いつもね™</title>
+
+  <!-- ページ説明 -->
+  <meta
+    name="description"
+    content="いつもね™に登録した、うちの子との思い出や記念日を振り返るアーカイブページです。"
+  >
+
+  <!-- ブラウザUIのテーマカラー -->
+  <meta
+    name="theme-color"
+    content="#ffffff"
+  >
+
+
+  <!-- =========================================================
+       共通CSS
+       ========================================================= -->
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+
+  <!-- =========================================================
+       アイコン
+       ========================================================= -->
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="192x192"
+    href="icons/icon-192.png"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="icons/icon-192.png"
+  >
+
+
+  <!-- =========================================================
+       memories.html 専用スタイル
+       ========================================================= -->
+
+  <style>
+
+    /* ---------------------------------------------------------
+       ページ全体
+       --------------------------------------------------------- */
+
+    .memories-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+
+    /* ---------------------------------------------------------
+       現在のうちの子
+       --------------------------------------------------------- */
+
+    .current-pet {
+      display: flex;
+
+      align-items: center;
+
+      gap: 16px;
+
+      margin-bottom: 30px;
+
+      padding: 18px 20px;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius);
+    }
+
+
+    /* 丸いプロフィール写真 */
+    .current-pet-photo {
+      width: 72px;
+      height: 72px;
+
+      flex-shrink: 0;
+
+      border-radius: 50%;
+
+      object-fit: cover;
+
+      background: #f2efeb;
+
+      border: 1px solid var(--line);
+    }
+
+
+    /* 名前部分 */
+    .current-pet-info {
+      flex: 1;
+    }
+
+
+    .current-pet-name {
+      margin: 0;
+
+      font-size: 22px;
+
+      font-weight: 500;
+    }
+
+
+    .current-pet-sub {
+      margin-top: 4px;
+
+      color: var(--subtext);
+
+      font-size: 13px;
+    }
+
+
+    /* ---------------------------------------------------------
+       セクション見出し
+       --------------------------------------------------------- */
+
+    .memory-section {
+      margin-top: 36px;
+    }
+
+
+    .memory-section-title {
+      margin: 0 0 16px;
+
+      font-size: 21px;
+
+      font-weight: 600;
+    }
+
+
+    /* ---------------------------------------------------------
+       タイムライン
+       --------------------------------------------------------- */
+
+    .timeline {
+      position: relative;
+
+      margin: 0;
+
+      padding: 0;
+
+      list-style: none;
+    }
+
+
+    /* 左側の縦線 */
+    .timeline::before {
+      content: "";
+
+      position: absolute;
+
+      left: 13px;
+      top: 10px;
+      bottom: 10px;
+
+      width: 2px;
+
+      background: var(--line);
+    }
+
+
+    /* 1項目 */
+    .timeline-item {
+      position: relative;
+
+      padding-left: 42px;
+
+      margin-bottom: 22px;
+    }
+
+
+    /* 丸いポイント */
+    .timeline-dot {
+      position: absolute;
+
+      left: 6px;
+      top: 8px;
+
+      width: 16px;
+      height: 16px;
+
+      border-radius: 50%;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--blue),
+          var(--purple),
+          var(--pink)
+        );
+
+      box-shadow:
+        0 0 0 4px var(--bg);
+    }
+
+
+    /* タイムラインカード */
+    .timeline-card {
+      padding: 20px;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius-small);
+    }
+
+
+    .timeline-date {
+      margin-bottom: 4px;
+
+      color: var(--subtext);
+
+      font-size: 13px;
+    }
+
+
+    .timeline-title {
+      margin: 0 0 6px;
+
+      font-size: 18px;
+
+      font-weight: 600;
+    }
+
+
+    .timeline-text {
+      margin: 0;
+
+      color: var(--subtext);
+
+      white-space: pre-wrap;
+    }
+
+
+    /* ---------------------------------------------------------
+       思い出カード
+       --------------------------------------------------------- */
+
+    .memory-grid {
+      display: grid;
+
+      gap: 18px;
+    }
+
+
+    .memory-card {
+      padding: 24px;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius);
+    }
+
+
+    .memory-card-icon {
+      margin-bottom: 8px;
+
+      font-size: 28px;
+    }
+
+
+    .memory-card h3 {
+      margin: 0 0 8px;
+
+      font-size: 18px;
+    }
+
+
+    .memory-card p {
+      margin: 0;
+
+      color: var(--subtext);
+
+      white-space: pre-wrap;
+    }
+
+
+    /* ---------------------------------------------------------
+       写真カード
+       --------------------------------------------------------- */
+
+    .photo-memory-card {
+      overflow: hidden;
+
+      padding: 0;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius);
+    }
+
+
+    .photo-memory-image {
+      width: 100%;
+
+      aspect-ratio: 4 / 3;
+
+      object-fit: cover;
+
+      background: #f2efeb;
+    }
+
+
+    .photo-memory-body {
+      padding: 20px;
+    }
+
+
+    .photo-memory-body h3 {
+      margin: 0 0 6px;
+
+      font-size: 18px;
+    }
+
+
+    .photo-memory-body p {
+      margin: 0;
+
+      color: var(--subtext);
+    }
+
+
+    /* ---------------------------------------------------------
+       操作ボタン
+       --------------------------------------------------------- */
+
+    .memory-actions {
+      display: grid;
+
+      gap: 12px;
+
+      margin-top: 34px;
+    }
+
+
+    /* ---------------------------------------------------------
+       データが無い場合
+       --------------------------------------------------------- */
+
+    .empty-state {
+      padding: 38px 24px;
+
+      text-align: center;
+
+      background: white;
+
+      border: 1px solid var(--line);
+
+      border-radius: var(--radius);
+    }
+
+
+    .empty-state img {
+      width: 100px;
+
+      margin: 0 auto 18px;
+    }
+
+
+    .empty-state h2 {
+      margin: 0 0 10px;
+
+      font-size: 22px;
+
+      font-weight: 500;
+    }
+
+
+    .empty-state p {
+      margin: 0 0 24px;
+
+      color: var(--subtext);
+    }
+
+
+    /* ---------------------------------------------------------
+       PC表示
+       --------------------------------------------------------- */
+
+    @media (min-width: 700px) {
+
+      .memory-grid {
+        grid-template-columns:
+          repeat(2, 1fr);
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================================================
+       ヘッダー
+       ========================================================= -->
+
+  <header>
+
+    <div class="container header-inner">
+
+      <!-- ロゴ＋ブランド名 -->
+      <a
+        href="index.html"
+        class="brand"
+      >
+
+        <img
+          src="icons/icon-192.png"
+          alt="いつもね"
+          class="brand-mark"
+        >
+
+        <div class="brand-name">
+          いつもね<sup>™</sup>
+        </div>
+
+      </a>
+
+
+      <!-- 将来メニュー用 -->
+      <button
+        class="menu-button"
+        aria-label="メニュー"
+        type="button"
+      >
+        ☰
+      </button>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- =========================================================
+       メイン
+       ========================================================= -->
+
+  <main>
+
+
+    <!-- =======================================================
+         ページタイトル
+         ======================================================= -->
+
+    <section class="page-hero">
+
+      <div class="container">
+
+        <img
+          src="icons/icon-192.png"
+          alt=""
+          class="page-logo"
+        >
+
+        <h1 class="page-title">
+          思い出
+        </h1>
+
+        <p class="page-subtitle">
+          一緒に過ごした時間を、
+          少しずつ残していきます。
+        </p>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =======================================================
+         思い出アーカイブ本体
+         ======================================================= -->
+
+    <section>
+
+      <div class="container">
+
+        <div
+          id="memories-root"
+          class="memories-wrap"
+        >
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =========================================================
+       フッター
+       ========================================================= -->
+
+  <footer>
+
+    <div class="container">
+
+      <img
+        src="icons/icon-192.png"
+        alt=""
+        class="footer-logo"
+      >
+
+      <div>
+        いつもね™ / Itsumone
+      </div>
+
+      <div>
+        © 2026 03 LLC
+      </div>
+
+    </div>
+
+  </footer>
+
+
+
+  <!-- =========================================================
+       JavaScript
+       ========================================================= -->
+
+  <script>
+
+    /* =========================================================
+       保存データを読み込む
+       ========================================================= */
+
+    const pets =
+      JSON.parse(
+        localStorage.getItem("itsumonePets") || "[]"
+      );
+
+
+    /* 現在選択中の子 */
+    const currentPetId =
+      localStorage.getItem("itsumoneCurrentPet");
+
+
+    /* 表示先 */
+    const memoriesRoot =
+      document.getElementById("memories-root");
+
+
+    /* =========================================================
+       HTMLエスケープ
+       ========================================================= */
+
+    function escapeHtml(value) {
+
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+    }
+
+
+    /* =========================================================
+       日付表示
+       
+       2020-01-05
+       ↓
+       2020年1月5日
+       ========================================================= */
+
+    function formatDate(dateString) {
+
+      if (!dateString) {
+        return "";
+      }
+
+
+      const date =
+        new Date(
+          dateString + "T00:00:00"
+        );
+
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+
+        return dateString;
+
+      }
+
+
+      return (
+        date.getFullYear() +
+        "年" +
+        (date.getMonth() + 1) +
+        "月" +
+        date.getDate() +
+        "日"
+      );
+
+    }
+
+
+    /* =========================================================
+       現在の子を取得
+       ========================================================= */
+
+    function getCurrentPet() {
+
+      if (pets.length === 0) {
+        return null;
+      }
+
+
+      if (currentPetId) {
+
+        const found =
+          pets.find(
+            pet =>
+              String(pet.id) ===
+              String(currentPetId)
+          );
+
+
+        if (found) {
+          return found;
+        }
+
+      }
+
+
+      /* IDが無ければ最後に登録した子 */
+      return pets[pets.length - 1];
+
+    }
+
+
+    /* =========================================================
+       タイムライン用データを作る
+       ========================================================= */
+
+    function buildTimeline(pet) {
+
+      const items = [];
+
+
+      /* 誕生日 */
+      if (pet.birthday) {
+
+        items.push({
+
+          date:
+            pet.birthday,
+
+          title:
+            "生まれた日",
+
+          text:
+            `${escapeHtml(pet.name)}の誕生日`
+
+        });
+
+      }
+
+
+      /* うちに来た日 */
+      if (pet.welcomeDay) {
+
+        items.push({
+
+          date:
+            pet.welcomeDay,
+
+          title:
+            "うちに来た日",
+
+          text:
+            "家族になった大切な日"
+
+        });
+
+      }
+
+
+      /* お別れした日 */
+      if (pet.farewellDay) {
+
+        items.push({
+
+          date:
+            pet.farewellDay,
+
+          title:
+            "お別れした日",
+
+          text:
+            "一緒に過ごした時間を、これからも。"
+
+        });
+
+      }
+
+
+      /* 日付順に並べる */
+      items.sort(
+        (a, b) =>
+          new Date(a.date) -
+          new Date(b.date)
+      );
+
+
+      return items;
+
+    }
+
+
+    /* =========================================================
+       メイン表示
+       ========================================================= */
+
+    function renderMemories() {
+
+      const pet =
+        getCurrentPet();
+
+
+      /* ---------------------------------------------------------
+         登録データが無い場合
+         --------------------------------------------------------- */
+
+      if (!pet) {
+
+        memoriesRoot.innerHTML = `
+
+          <div class="empty-state">
+
+            <img
+              src="icons/icon-192.png"
+              alt=""
+            >
+
+            <h2>
+              まだ、うちの子が登録されていません。
+            </h2>
+
+            <p>
+              まずは名前と写真から、
+              記録を始めてみましょう。
+            </p>
+
+            <a
+              href="register.html"
+              class="btn btn-primary"
+            >
+              うちの子を登録する
+            </a>
+
+          </div>
+
+        `;
+
+        return;
+      }
+
+
+      /* ---------------------------------------------------------
+         写真
+         --------------------------------------------------------- */
+
+      const photo =
+        pet.photo
+          ? pet.photo
+          : "icons/icon-192.png";
+
+
+      /* ---------------------------------------------------------
+         サブ情報
+         --------------------------------------------------------- */
+
+      const subParts = [];
+
+
+      if (pet.species) {
+        subParts.push(
+          escapeHtml(pet.species)
+        );
+      }
+
+
+      if (pet.nickname) {
+        subParts.push(
+          `呼び名：${escapeHtml(pet.nickname)}`
+        );
+      }
+
+
+      const subText =
+        subParts.join("・");
+
+
+      /* ---------------------------------------------------------
+         タイムライン
+         --------------------------------------------------------- */
+
+      const timeline =
+        buildTimeline(pet);
+
+
+      let timelineHtml = "";
+
+
+      if (timeline.length > 0) {
+
+        timelineHtml = `
+
+          <div class="memory-section">
+
+            <h2 class="memory-section-title">
+              大切な日
+            </h2>
+
+            <ul class="timeline">
+
+              ${timeline
+                .map(
+                  item => `
+
+                    <li class="timeline-item">
+
+                      <div class="timeline-dot"></div>
+
+                      <div class="timeline-card">
+
+                        <div class="timeline-date">
+                          ${formatDate(item.date)}
+                        </div>
+
+                        <h3 class="timeline-title">
+                          ${item.title}
+                        </h3>
+
+                        <p class="timeline-text">
+                          ${item.text}
+                        </p>
+
+                      </div>
+
+                    </li>
+
+                  `
+                )
+                .join("")
+              }
+
+            </ul>
+
+          </div>
+
+        `;
+
+      }
+
+
+      /* ---------------------------------------------------------
+         写真カード
+         --------------------------------------------------------- */
+
+      const photoHtml = `
+
+        <div class="memory-section">
+
+          <h2 class="memory-section-title">
+            写真
+          </h2>
+
+          <div class="photo-memory-card">
+
+            <img
+              src="${photo}"
+              alt="${escapeHtml(pet.name)}の写真"
+              class="photo-memory-image"
+            >
+
+            <div class="photo-memory-body">
+
+              <h3>
+                ${escapeHtml(pet.name)}
+              </h3>
+
+              <p>
+                大切な一枚。
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+
+      /* ---------------------------------------------------------
+         その子らしさ
+         --------------------------------------------------------- */
+
+      const cards = [];
+
+
+      if (pet.favorites) {
+
+        cards.push(`
+
+          <div class="memory-card">
+
+            <div class="memory-card-icon">
+              ❤️
+            </div>
+
+            <h3>
+              好きなもの
+            </h3>
+
+            <p>
+              ${escapeHtml(pet.favorites)}
+            </p>
+
+          </div>
+
+        `);
+
+      }
+
+
+      if (pet.personality) {
+
+        cards.push(`
+
+          <div class="memory-card">
+
+            <div class="memory-card-icon">
+              🐾
+            </div>
+
+            <h3>
+              性格・しぐさ
+            </h3>
+
+            <p>
+              ${escapeHtml(pet.personality)}
+            </p>
+
+          </div>
+
+        `);
+
+      }
+
+
+      if (pet.firstMemory) {
+
+        cards.push(`
+
+          <div class="memory-card">
+
+            <div class="memory-card-icon">
+              📝
+            </div>
+
+            <h3>
+              思い出
+            </h3>
+
+            <p>
+              ${escapeHtml(pet.firstMemory)}
+            </p>
+
+          </div>
+
+        `);
+
+      }
+
+
+      let memoryCardsHtml = "";
+
+
+      if (cards.length > 0) {
+
+        memoryCardsHtml = `
+
+          <div class="memory-section">
+
+            <h2 class="memory-section-title">
+              その子らしさ
+            </h2>
+
+            <div class="memory-grid">
+
+              ${cards.join("")}
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+
+
+      /* ---------------------------------------------------------
+         ページ全体を組み立て
+         --------------------------------------------------------- */
+
+      memoriesRoot.innerHTML = `
+
+        <!-- ================================================
+             現在のうちの子
+             ================================================ -->
+
+        <div class="current-pet">
+
+          <img
+            src="${photo}"
+            alt="${escapeHtml(pet.name)}の写真"
+            class="current-pet-photo"
+          >
+
+          <div class="current-pet-info">
+
+            <h2 class="current-pet-name">
+              ${escapeHtml(pet.name)}
+            </h2>
+
+            ${
+              subText
+                ? `
+                  <div class="current-pet-sub">
+                    ${subText}
+                  </div>
+                `
+                : ""
+            }
+
+          </div>
+
+        </div>
+
+
+        <!-- 写真 -->
+        ${photoHtml}
+
+
+        <!-- 大切な日 -->
+        ${timelineHtml}
+
+
+        <!-- 好きなもの・性格・思い出 -->
+        ${memoryCardsHtml}
+
+
+        <!-- ================================================
+             今後追加していくための導線
+             ================================================ -->
+
+        <div class="memory-actions">
+
+          <!--
+            今後 memory-add.html を作ったら、
+            ここから思い出を追加できるようにします。
+          -->
+          <a
+            href="memory-add.html"
+            class="btn btn-primary"
+          >
+            思い出を追加する
+          </a>
+
+          <!-- プロフィールへ戻る -->
+          <a
+            href="profile.html"
+            class="btn btn-secondary"
+          >
+            プロフィールを見る
+          </a>
+
+          <!-- トップへ戻る -->
+          <a
+            href="index.html"
+            class="btn btn-secondary"
+          >
+            トップへ戻る
+          </a>
+
+        </div>
+
+      `;
+
+    }
+
+
+    /* =========================================================
+       初回表示
+       ========================================================= */
+
+    renderMemories();
+
+  </script>
+
+
+</body>
+
+</html>
